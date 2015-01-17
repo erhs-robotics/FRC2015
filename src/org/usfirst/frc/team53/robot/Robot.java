@@ -1,7 +1,13 @@
 
 package org.usfirst.frc.team53.robot;
 
+import java.sql.Time;
+
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -30,9 +36,9 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	claw = new Claw();
-		oi = new OI();	
-		driveTrain = new DriveTrain();
+    	//claw = new Claw();
+    	driveTrain = new DriveTrain();    	
+		oi = new OI();		
 		
         // instantiate the command used for the autonomous period
         autonomousCommand = null;
@@ -79,8 +85,9 @@ public class Robot extends IterativeRobot {
     
     /**
      * This function is called periodically during test mode
-     */
+     */    
     public void testPeriodic() {
         LiveWindow.run();
+       
     }
 }

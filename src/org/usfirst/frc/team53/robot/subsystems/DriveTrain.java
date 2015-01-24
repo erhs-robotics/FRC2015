@@ -18,9 +18,11 @@ public class DriveTrain extends PIDSubsystem {
 	
 	public RobotDrive robotDrive;	
 	private Talon driveTopLeft, driveTopRight, driveBottomLeft, driveBottomRight;
-	private static final double kp = 1.0/90, ki = 0, kd = 0;
-	private Gyro gyro;
+	private static final double kp = 0.6, ki = 0.02, kd = 0;
+	public Gyro gyro;
 	private double rotation;
+	private static final double K = 0.01;
+	private boolean manualMode = false;
 	
 	public DriveTrain() {		
 		super(kp, ki, kd);		
@@ -39,11 +41,13 @@ public class DriveTrain extends PIDSubsystem {
 		LiveWindow.addActuator("DriveTrain", "Top Right", driveTopRight);
 		LiveWindow.addActuator("DriveTrain", "Gyro", gyro);
 		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
+		setOutputRange(-0.5 / K, 0.5 / K);
 		setSetpoint(0);
-		disable();
+		//disable();
 	}
 	
 	public void mecanumDrive() {
+		
 		double x = OI.stick.getX();
 		double y = OI.stick.getY();
 		double rot = OI.stick.getTwist();
@@ -52,7 +56,29 @@ public class DriveTrain extends PIDSubsystem {
 		rot = rot*rot*rot;
 		rot = Math.min(rot, 0.4);
 		rot = Math.max(rot, -0.4);
-		robotDrive.mecanumDrive_Cartesian(x, y, rotation, 0);		
+		if(manualMode)
+			robotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
+		else
+			robotDrive.mecanumDrive_Cartesian(x*.6, y*.6, rotation, 0);
+	}
+	
+	public void setManualMode() {
+		manualMode = true;
+		disable();
+	}
+	
+	public void setPIDMode() {
+		manualMode = false;
+		setSetpoint(gyro.getAngle());
+		enable();
+	}
+	
+	public void togglePID() {
+		if(getPIDController().isEnable()) {
+			disable();
+		} else {
+			enable();
+		}
 	}
 		
 
@@ -67,6 +93,6 @@ public class DriveTrain extends PIDSubsystem {
 
 	@Override
 	protected void usePIDOutput(double output) {		
-		rotation = output;
+		rotation = output * K;		
 	}
 }

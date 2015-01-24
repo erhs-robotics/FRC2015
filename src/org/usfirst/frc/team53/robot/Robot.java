@@ -1,13 +1,7 @@
 
 package org.usfirst.frc.team53.robot;
 
-import java.sql.Time;
-
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -81,7 +75,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        //driveTrain.mecanumDrive()
+        driveTrain.mecanumDrive();
     }
     
     /**
@@ -90,5 +84,6 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
         driveTrain.mecanumDrive();
+        System.out.println(driveTrain.gyro.getAngle());
     }
 }

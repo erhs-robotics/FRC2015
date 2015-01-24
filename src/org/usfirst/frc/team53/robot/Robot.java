@@ -36,8 +36,8 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	//claw = new Claw();
-    	driveTrain = new DriveTrain();    	
+    	claw = new Claw();
+    	//driveTrain = new DriveTrain();    	
 		oi = new OI();		
 		
         // instantiate the command used for the autonomous period
@@ -87,7 +87,6 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */    
     public void testPeriodic() {
-        LiveWindow.run();
-       
+        LiveWindow.run();       
     }
 }

@@ -24,8 +24,9 @@ public class RobotMap {
 			  driveTrainTopLeft = 3,
 			  driveTrainTopRight = 4;
 	
-	//
+	// Analog In	
 	public static int elevatorPot = 5;
+	public static int gyro = 0;
 	
 	// Solenoid
 	public static int clawSolenoid1 = 1;

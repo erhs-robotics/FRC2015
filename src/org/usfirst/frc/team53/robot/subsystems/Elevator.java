@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 public class Elevator extends PIDSubsystem {
 	private Talon talon;
 	private AnalogPotentiometer pot;
-	private static final double kp = 1, ki = 0.0001, kd = 0;
+	private static final double kp = 1, ki = 0, kd = 0;
 	private static final double levelStep = 10;
 	
 	public Elevator() {

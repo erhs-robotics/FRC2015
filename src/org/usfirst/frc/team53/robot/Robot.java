@@ -81,6 +81,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        //driveTrain.mecanumDrive()
     }
     
     /**
@@ -88,6 +89,6 @@ public class Robot extends IterativeRobot {
      */    
     public void testPeriodic() {
         LiveWindow.run();
-       
+        driveTrain.mecanumDrive();
     }
 }

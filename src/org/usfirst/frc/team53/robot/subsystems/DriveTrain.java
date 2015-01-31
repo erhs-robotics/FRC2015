@@ -1,17 +1,12 @@
 package org.usfirst.frc.team53.robot.subsystems;
 
 import org.usfirst.frc.team53.robot.OI;
-import org.usfirst.frc.team53.robot.Robot;
 import org.usfirst.frc.team53.robot.RobotMap;
-import org.usfirst.frc.team53.robot.util.Utils;
-
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 public class DriveTrain extends PIDSubsystem {

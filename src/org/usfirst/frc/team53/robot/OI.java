@@ -1,6 +1,5 @@
 package org.usfirst.frc.team53.robot;
 
-import org.usfirst.frc.team53.robot.commands.HoldClaw;
 import org.usfirst.frc.team53.robot.util.JoystickButtonX;
 import org.usfirst.frc.team53.robot.util.SmartDashboardX;
 

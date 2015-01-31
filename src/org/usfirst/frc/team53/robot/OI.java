@@ -17,8 +17,7 @@ public class OI {
 		JoystickButtonX button3 = new JoystickButtonX(stick, 3);
 		JoystickButtonX button2 = new JoystickButtonX(stick, 2);
 		JoystickButtonX button4 = new JoystickButtonX(stick, 4);
-		JoystickButtonX button1 = new JoystickButtonX(stick, 1);
-		
+		JoystickButtonX button1 = new JoystickButtonX(stick, 1);		
 
 		if(Robot.claw != null) {
 			SmartDashboardX.putData("Open Claw", Robot.claw::open);

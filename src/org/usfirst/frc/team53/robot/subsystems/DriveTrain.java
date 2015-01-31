@@ -18,7 +18,7 @@ public class DriveTrain extends PIDSubsystem {
 	
 	public RobotDrive robotDrive;	
 	private Talon driveTopLeft, driveTopRight, driveBottomLeft, driveBottomRight;
-	private static final double kp = 0.6, ki = 0.02, kd = 0;
+	private static final double kp = 2, ki = 0.02, kd = 0;
 	public Gyro gyro;
 	private double rotation;
 	private static final double K = 0.01;
@@ -46,8 +46,7 @@ public class DriveTrain extends PIDSubsystem {
 		//disable();
 	}
 	
-	public void mecanumDrive() {
-		
+	public void mecanumDrive() {		
 		double x = OI.stick.getX();
 		double y = OI.stick.getY();
 		double rot = OI.stick.getTwist();
@@ -77,6 +76,7 @@ public class DriveTrain extends PIDSubsystem {
 		if(getPIDController().isEnable()) {
 			disable();
 		} else {
+			setSetpoint(gyro.getAngle());
 			enable();
 		}
 	}

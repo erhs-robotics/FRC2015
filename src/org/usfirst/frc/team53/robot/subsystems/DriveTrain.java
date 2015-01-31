@@ -59,6 +59,7 @@ public class DriveTrain extends PIDSubsystem {
 			robotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
 		else
 			robotDrive.mecanumDrive_Cartesian(x*.6, y*.6, rotation, 0);
+		
 	}
 	
 	public void setManualMode() {

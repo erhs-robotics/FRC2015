@@ -1,6 +1,5 @@
 package org.usfirst.frc.team53.robot;
 
-import org.usfirst.frc.team53.robot.commands.HoldClaw;
 import org.usfirst.frc.team53.robot.util.JoystickButtonX;
 import org.usfirst.frc.team53.robot.util.SmartDashboardX;
 
@@ -17,6 +16,7 @@ public class OI {
 		JoystickButtonX button3 = new JoystickButtonX(stick, 3);
 		JoystickButtonX button2 = new JoystickButtonX(stick, 2);
 		JoystickButtonX button4 = new JoystickButtonX(stick, 4);
+		JoystickButtonX button1 = new JoystickButtonX(stick, 1);		
 
 		if(Robot.claw != null) {
 			SmartDashboardX.putData("Open Claw", Robot.claw::open);
@@ -25,6 +25,11 @@ public class OI {
 			button4.whenPressed(Robot.claw::close);
 		}
 		
+		if(Robot.driveTrain != null) {		
+			button1.whenPressed(() -> Robot.driveTrain.setManualMode());
+			button1.whenReleased(() -> Robot.driveTrain.setPIDMode());
+			button2.whenPressed(() -> Robot.driveTrain.togglePID());
+		}
 		
 	}
 }

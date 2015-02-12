@@ -16,7 +16,9 @@ public class OI {
 		JoystickButtonX button3 = new JoystickButtonX(stick, 3);
 		JoystickButtonX button2 = new JoystickButtonX(stick, 2);
 		JoystickButtonX button4 = new JoystickButtonX(stick, 4);
-		JoystickButtonX button1 = new JoystickButtonX(stick, 1);		
+		JoystickButtonX button1 = new JoystickButtonX(stick, 1);	
+		JoystickButtonX button5 = new JoystickButtonX(stick, 5);
+		JoystickButtonX button6 = new JoystickButtonX(stick, 6);
 
 		if(Robot.claw != null) {
 			SmartDashboardX.putData("Open Claw", Robot.claw::open);
@@ -29,6 +31,11 @@ public class OI {
 			button1.whenPressed(() -> Robot.driveTrain.setManualMode());
 			button1.whenReleased(() -> Robot.driveTrain.setPIDMode());
 			button2.whenPressed(() -> Robot.driveTrain.togglePID());
+		}
+		if(Robot.elevator != null) {
+			button5.whileHeld(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint()-1));
+			button6.whileHeld(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint()+1));
+			
 		}
 		
 	}

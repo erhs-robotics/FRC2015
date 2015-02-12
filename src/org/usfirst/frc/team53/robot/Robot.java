@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import org.usfirst.frc.team53.robot.subsystems.Claw;
 import org.usfirst.frc.team53.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team53.robot.subsystems.Elevator;
 
 
 /**
@@ -20,6 +21,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static OI oi;
 	public static Compressor compressor;
+	public static Elevator elevator;
 
     Command autonomousCommand;  
     
@@ -29,6 +31,7 @@ public class Robot extends IterativeRobot {
     	
 		oi = new OI();
 		compressor = new Compressor();
+		elevator = new Elevator();
 		//compressor.stop();		
 		
         // instantiate the command used for the autonomous period

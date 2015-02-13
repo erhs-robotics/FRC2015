@@ -2,12 +2,14 @@ package org.usfirst.frc.team53.robot.subsystems;
 
 import org.usfirst.frc.team53.robot.OI;
 import org.usfirst.frc.team53.robot.RobotMap;
+
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain extends PIDSubsystem {
 	
@@ -36,9 +38,11 @@ public class DriveTrain extends PIDSubsystem {
 		LiveWindow.addActuator("DriveTrain", "Top Right", driveTopRight);
 		LiveWindow.addActuator("DriveTrain", "Gyro", gyro);
 		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
+		SmartDashboard.putData("Gyro", gyro);
 		setOutputRange(-0.5 / K, 0.5 / K);
 		setSetpoint(0);
 		//disable();
+		enable();
 	}
 	
 	public void mecanumDrive() {		

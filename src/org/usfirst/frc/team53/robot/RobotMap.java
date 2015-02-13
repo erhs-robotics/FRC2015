@@ -19,11 +19,23 @@ public class RobotMap {
     // public static int rangefinderPort = 1;
     // public static int rangefinderModule = 1;
 	
+	// PWM
+	public static int elevatorMotor = 4;
+	public static int driveTrainBottomLeft = 2,
+			  driveTrainBottomRight = 3,
+			  driveTrainTopLeft = 1,
+			  driveTrainTopRight = 0;
+	
+	// Analog In	
+	public static int elevatorPot = 5;
+	public static int gyro = 0;
+	
+	// Solenoid
+	public static int clawSolenoid1 = 1;
+	public static int clawSolenoid2 = 0;
+	
+	// Digital
 	public static final int elevatorEncoderChannelA = 2;
 	public static final int elevatorEncoderChannelB = 3;
-	public static final int elevatorMotor = 0;
-	public static final int elevatorPot = 0;
-	public static final int clawSolenoid1 = 0;
-	public static final int clawSolenoid2 = 1;
-	public static final int elevatorLimitSwitch = 0;
+	public static final int elevatorLimitSwitch = 5;
 }

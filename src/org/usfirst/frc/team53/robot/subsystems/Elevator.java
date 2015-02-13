@@ -31,12 +31,8 @@ public class Elevator extends PIDSubsystem {
 		LiveWindow.addActuator("Elevator", "Talon", talon);
 		LiveWindow.addSensor("Elevator", "Encoder", encoder);
 		LiveWindow.addSensor("Elevator", "Limit Switch", limitSwitch);
-		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());
-		
-		
-		setSetpoint(0);
-		
-		
+		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());	
+		setSetpoint(0);	
 	}
 	
 	public void resetEncoder() {

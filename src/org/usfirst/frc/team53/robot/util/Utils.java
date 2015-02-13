@@ -1,9 +1,8 @@
 package org.usfirst.frc.team53.robot.util;
 
 import edu.wpi.first.wpilibj.command.Command;
-
 public class Utils {
-	public static Command Runnable2Command(Runnable run) {
+	public static Command runnable2Command(Runnable run) {
 		return new Command() {			
 			@Override
 			protected boolean isFinished() { return true; }			

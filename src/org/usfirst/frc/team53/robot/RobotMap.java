@@ -18,11 +18,11 @@ public class RobotMap {
 	
 	
 	// PWM
-	public static int elevatorMotor = 4;
-	public static int driveTrainBottomLeft = 2,
-			  driveTrainBottomRight = 3,
-			  driveTrainTopLeft = 1,
-			  driveTrainTopRight = 0;
+	public static int elevatorMotor = 5;
+	public static int driveTrainBottomLeft = 1,
+			  driveTrainBottomRight = 2,
+			  driveTrainTopLeft = 3,
+			  driveTrainTopRight = 4;
 	
 	// Analog In	
 	public static int elevatorPot = 5;

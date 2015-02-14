@@ -18,13 +18,22 @@ public class Elevator extends PIDSubsystem {
 	private static final double levelStep = 10;
 	private static final double DISTANCE_PER_PULSE = 0.001;
 	
+	private static final int ELEVATOR_MAX_LEVEL = 6;
+	
+	private static final double ELEVATOR_LEVEL[] = { 0,
+													 10,
+													 20,
+													 30,
+													 40,
+													 50,
+													 60 };
+	
 	public Elevator() {
 		super(kp, ki, kd);
 		talon = new Talon(RobotMap.elevatorMotor);
 		limitSwitch = new DigitalInput(RobotMap.elevatorLimitSwitch);
-		encoder = new Encoder(8, 9);		
+		encoder = new Encoder(RobotMap.elevatorEncoderChannelA, RobotMap.elevatorEncoderChannelB);		
 		encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-		
 		// disable pid controller
 		// this.disable();		
 		
@@ -32,6 +41,7 @@ public class Elevator extends PIDSubsystem {
 		LiveWindow.addSensor("Elevator", "Encoder", encoder);
 		LiveWindow.addSensor("Elevator", "Limit Switch", limitSwitch);
 		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());	
+		
 		setSetpoint(0);	
 	}
 	
@@ -44,6 +54,8 @@ public class Elevator extends PIDSubsystem {
 	}
 	
 	public void setLevel(int level) {
+		level = Math.max(level, 0);
+		level = Math.min(level, ELEVATOR_MAX_LEVEL);
 		setSetpoint(level * levelStep);
 	}
 	

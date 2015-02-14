@@ -35,7 +35,7 @@ public class RobotMap {
 	public static int clawSolenoid2 = 0;
 	
 	// Digital
-	public static final int elevatorEncoderChannelA = 2;
-	public static final int elevatorEncoderChannelB = 3;
+	public static final int elevatorEncoderChannelA = 0;
+	public static final int elevatorEncoderChannelB = 1;
 	public static final int elevatorLimitSwitch = 5;
 }

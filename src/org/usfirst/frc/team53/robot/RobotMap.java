@@ -16,8 +16,21 @@ public class RobotMap {
     // public static int rangefinderPort = 1;
     // public static int rangefinderModule = 1;
 	
-	public static int elevatorMotor = 0;
-	public static int elevatorPot = 0;
-	public static int clawSolenoid1 = 0;
-	public static int clawSolenoid2 = 1;
+	
+	// PWM
+	public static int elevatorMotor = 5;
+	public static int driveTrainBottomLeft = 1,
+			  driveTrainBottomRight = 2,
+			  driveTrainTopLeft = 3,
+			  driveTrainTopRight = 4;
+	
+	// Analog In	
+	public static int elevatorPot = 5;
+	public static int gyro = 0;
+	
+	// Solenoid
+	public static int clawSolenoid1 = 1;
+	public static int clawSolenoid2 = 0;
+	
+	
 }

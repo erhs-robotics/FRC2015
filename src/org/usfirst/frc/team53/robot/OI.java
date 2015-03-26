@@ -13,10 +13,10 @@ public class OI {
 	public static Joystick stick = new Joystick(0);
 
 	public OI() {
-		JoystickButtonX button3 = new JoystickButtonX(stick, 3);
+		JoystickButtonX button1 = new JoystickButtonX(stick, 1);
 		JoystickButtonX button2 = new JoystickButtonX(stick, 2);
-		JoystickButtonX button4 = new JoystickButtonX(stick, 4);
-		JoystickButtonX button1 = new JoystickButtonX(stick, 1);	
+		JoystickButtonX button3 = new JoystickButtonX(stick, 3);		
+		JoystickButtonX button4 = new JoystickButtonX(stick, 4);			
 		JoystickButtonX button5 = new JoystickButtonX(stick, 5);
 		JoystickButtonX button6 = new JoystickButtonX(stick, 6);
 
@@ -34,9 +34,7 @@ public class OI {
 		}
 		if(Robot.elevator != null) {
 			button5.whileHeld(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint()-1));
-			button6.whileHeld(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint()+1));
-			
-		}
-		
+			button6.whileHeld(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint()+1));			
+		}		
 	}
 }

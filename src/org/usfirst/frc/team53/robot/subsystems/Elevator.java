@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends PIDSubsystem {
-	private Talon talon;
+	private Talon talon1;
+	private Talon talon2;
 	private Encoder encoder;
 	private DigitalInput limitSwitch;
 	private static final double kp = -12.6, ki = 0, kd = 0;
@@ -30,14 +31,16 @@ public class Elevator extends PIDSubsystem {
 	
 	public Elevator() {
 		super(kp, ki, kd);
-		talon = new Talon(RobotMap.elevatorMotor);
+		talon1 = new Talon(RobotMap.elevatorMotor1);
+		talon2 = new Talon(RobotMap.elevatorMotor2);
 		limitSwitch = new DigitalInput(RobotMap.elevatorLimitSwitch);
 		encoder = new Encoder(RobotMap.elevatorEncoderChannelA, RobotMap.elevatorEncoderChannelB);		
 		encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 		// disable pid controller
 		// this.disable();		
 		
-		LiveWindow.addActuator("Elevator", "Talon", talon);
+		LiveWindow.addActuator("Elevator", "Talon1", talon1);
+		LiveWindow.addActuator("Elecator", "Talon2", talon2);
 		LiveWindow.addSensor("Elevator", "Encoder", encoder);
 		LiveWindow.addSensor("Elevator", "Limit Switch", limitSwitch);
 		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());	
@@ -64,8 +67,10 @@ public class Elevator extends PIDSubsystem {
 	}
 	
 	public void setSpeed(double speed) {
-		if(!this.getPIDController().isEnable()) 
-			talon.set(speed);
+		if(!this.getPIDController().isEnable()) {
+			talon1.set(speed);
+			talon2.set(speed);
+		}
 	}
 
 	@Override
@@ -79,6 +84,7 @@ public class Elevator extends PIDSubsystem {
 
 	@Override
 	protected void usePIDOutput(double output) {
-		talon.set(output);
+		talon1.set(output);
+		talon2.set(output);
 	}
 }

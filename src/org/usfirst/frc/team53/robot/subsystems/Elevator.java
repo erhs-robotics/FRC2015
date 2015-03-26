@@ -15,32 +15,25 @@ public class Elevator extends PIDSubsystem {
 	private Talon talon2;
 	private Encoder encoder;
 	private DigitalInput limitSwitch;
-	private static final double kp = -12.6, ki = 0, kd = 0;
-	private static final double levelStep = 10;
-	private static final double DISTANCE_PER_PULSE = 0.001;
+	private static final double KP = 12.6, KI = 0, KD = 0;	
+	private static final double DISTANCE_PER_PULSE = 0.001;	
+	private static int level = 0;
+	private static int mode = 0;
+	private static final double ELEVATOR_LEVELS[][] = {
+		{0.0, 1.0, 2.0, 3.0, 4},  // Tote levels
+		{0.3, 1.3, 2.3, 3.3, 4}}; // Stacking levels
 	
-	private static final int ELEVATOR_MAX_LEVEL = 6;
-	
-	private static final double ELEVATOR_LEVEL[] = { 0,
-													 10,
-													 20,
-													 30,
-													 40,
-													 50,
-													 60 };
 	
 	public Elevator() {
-		super(kp, ki, kd);
-		talon1 = new Talon(RobotMap.elevatorMotor1);
+		super(KP, KI, KD);
+		talon1 = new Talon(RobotMap.elevatorMotor1);	
 		talon2 = new Talon(RobotMap.elevatorMotor2);
 		limitSwitch = new DigitalInput(RobotMap.elevatorLimitSwitch);
 		encoder = new Encoder(RobotMap.elevatorEncoderChannelA, RobotMap.elevatorEncoderChannelB);		
-		encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-		// disable pid controller
-		// this.disable();		
+		encoder.setDistancePerPulse(DISTANCE_PER_PULSE);		
 		
 		LiveWindow.addActuator("Elevator", "Talon1", talon1);
-		LiveWindow.addActuator("Elecator", "Talon2", talon2);
+		LiveWindow.addActuator("Elevator", "Talon2", talon2);
 		LiveWindow.addSensor("Elevator", "Encoder", encoder);
 		LiveWindow.addSensor("Elevator", "Limit Switch", limitSwitch);
 		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());	
@@ -56,11 +49,31 @@ public class Elevator extends PIDSubsystem {
 		getPIDController().setSetpoint(set);
 	}
 	
-	public void setLevel(int level) {
-		level = Math.max(level, 0);
-		level = Math.min(level, ELEVATOR_MAX_LEVEL);
-		setSetpoint(level * levelStep);
+	public void toggleMode() {
+		mode = (mode == 0) ? 1 : 0;
 	}
+	
+	public void setToteLevelMode() {
+		mode = 0;
+	}
+	
+	public void setStackLevelMode() {
+		mode = 1;
+	}
+	
+	public void incrementLevel() {
+		level++;
+		level = Math.max(level, 0);
+		level = Math.min(level, ELEVATOR_LEVELS[mode].length - 1);
+		setSetpoint(ELEVATOR_LEVELS[mode][level]);
+	}
+	
+	public void decrementLevel() {
+		level--;
+		level = Math.max(level, 0);
+		level = Math.min(level, ELEVATOR_LEVELS[mode].length - 1);
+		setSetpoint(ELEVATOR_LEVELS[mode][level]);
+	}	
 	
 	public boolean isAtBottom() {
 		return limitSwitch.get();
@@ -68,7 +81,7 @@ public class Elevator extends PIDSubsystem {
 	
 	public void setSpeed(double speed) {
 		if(!this.getPIDController().isEnable()) {
-			talon1.set(speed);
+			talon1.set(-speed);
 			talon2.set(speed);
 		}
 	}
@@ -84,7 +97,7 @@ public class Elevator extends PIDSubsystem {
 
 	@Override
 	protected void usePIDOutput(double output) {
-		talon1.set(output);
+		talon1.set(-output);
 		talon2.set(output);
 	}
 }

@@ -13,12 +13,13 @@ public class OI {
 	public static Joystick stick = new Joystick(0);
 
 	public OI() {
-		JoystickButtonX button1 = new JoystickButtonX(stick, 1);
-		JoystickButtonX button2 = new JoystickButtonX(stick, 2);
-		JoystickButtonX button3 = new JoystickButtonX(stick, 3);		
-		JoystickButtonX button4 = new JoystickButtonX(stick, 4);			
-		JoystickButtonX button5 = new JoystickButtonX(stick, 5);
-		JoystickButtonX button6 = new JoystickButtonX(stick, 6);
+		JoystickButtonX button1 = new JoystickButtonX(stick, 1);// drivetrain manual mode/pid mode
+		JoystickButtonX button2 = new JoystickButtonX(stick, 2);// drivetrain toggle pid
+		JoystickButtonX button3 = new JoystickButtonX(stick, 3);// claw open		
+		JoystickButtonX button4 = new JoystickButtonX(stick, 4);// claw close		
+		JoystickButtonX button5 = new JoystickButtonX(stick, 5);// decrement elevator
+		JoystickButtonX button6 = new JoystickButtonX(stick, 6);// increment elevator
+		JoystickButtonX button7 = new JoystickButtonX(stick, 7);// elevator mode toggle		
 
 		if(Robot.claw != null) {
 			SmartDashboardX.putData("Open Claw", Robot.claw::open);
@@ -32,9 +33,11 @@ public class OI {
 			button1.whenReleased(() -> Robot.driveTrain.setPIDMode());
 			button2.whenPressed(() -> Robot.driveTrain.togglePID());
 		}
+		
 		if(Robot.elevator != null) {
-			button5.whileHeld(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint()-1));
-			button6.whileHeld(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint()+1));			
+			button5.whenPressed(() -> Robot.elevator.decrementLevel());
+			button6.whenPressed(() -> Robot.elevator.incrementLevel());
+			button7.whenPressed(() -> Robot.elevator.toggleMode());
 		}		
 	}
 }

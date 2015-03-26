@@ -11,11 +11,12 @@ public class Elevator extends PIDSubsystem {
 	private Talon talon;
 	private AnalogPotentiometer pot;
 	private static final double kp = 1, ki = 0, kd = 0;
-	private static final double levelStep = 10;
+	private static final double levelStep = 10; //calibrate
 	
 	public Elevator() {
 		super(kp, ki, kd);		
 		talon = new Talon(RobotMap.elevatorMotor);
+		
 		pot = new AnalogPotentiometer(RobotMap.elevatorPot);
 		setSetpoint(pot.get());
 		

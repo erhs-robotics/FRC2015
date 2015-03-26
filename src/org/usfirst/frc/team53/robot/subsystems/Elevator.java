@@ -38,6 +38,7 @@ public class Elevator extends PIDSubsystem {
 		LiveWindow.addActuator("Elevator", "Talon2", talon2);
 		LiveWindow.addSensor("Elevator", "Encoder", encoder);
 		LiveWindow.addSensor("Elevator", "Limit Switch", topLimitSwitch);
+		LiveWindow.addSensor("Elevator", "Limit Switch", bottomLimitSwitch);
 		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());	
 		
 		setSetpoint(0);	
@@ -78,6 +79,10 @@ public class Elevator extends PIDSubsystem {
 	}	
 	
 	public boolean isAtBottom() {
+		return bottomLimitSwitch.get();
+	}
+	
+	public boolean isAtTop() { 
 		return topLimitSwitch.get();
 	}
 	

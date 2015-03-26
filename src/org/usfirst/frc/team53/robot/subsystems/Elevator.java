@@ -14,7 +14,8 @@ public class Elevator extends PIDSubsystem {
 	private Talon talon1;
 	private Talon talon2;
 	private Encoder encoder;
-	private DigitalInput limitSwitch;
+	private DigitalInput topLimitSwitch;
+	private DigitalInput bottomLimitSwitch;
 	private static final double KP = 12.6, KI = 0, KD = 0;	
 	private static final double DISTANCE_PER_PULSE = 0.001;	
 	private static int level = 0;
@@ -28,14 +29,15 @@ public class Elevator extends PIDSubsystem {
 		super(KP, KI, KD);
 		talon1 = new Talon(RobotMap.elevatorMotor1);	
 		talon2 = new Talon(RobotMap.elevatorMotor2);
-		limitSwitch = new DigitalInput(RobotMap.elevatorLimitSwitch);
+		topLimitSwitch = new DigitalInput(RobotMap.elevatorTopLimitSwitch);
+		bottomLimitSwitch = new DigitalInput(RobotMap.elevatorBottomLimitSwitch);
 		encoder = new Encoder(RobotMap.elevatorEncoderChannelA, RobotMap.elevatorEncoderChannelB);		
 		encoder.setDistancePerPulse(DISTANCE_PER_PULSE);		
 		
 		LiveWindow.addActuator("Elevator", "Talon1", talon1);
 		LiveWindow.addActuator("Elevator", "Talon2", talon2);
 		LiveWindow.addSensor("Elevator", "Encoder", encoder);
-		LiveWindow.addSensor("Elevator", "Limit Switch", limitSwitch);
+		LiveWindow.addSensor("Elevator", "Limit Switch", topLimitSwitch);
 		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());	
 		
 		setSetpoint(0);	
@@ -76,7 +78,7 @@ public class Elevator extends PIDSubsystem {
 	}	
 	
 	public boolean isAtBottom() {
-		return limitSwitch.get();
+		return topLimitSwitch.get();
 	}
 	
 	public void setSpeed(double speed) {

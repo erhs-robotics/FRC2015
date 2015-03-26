@@ -37,5 +37,6 @@ public class RobotMap {
 	// Digital
 	public static final int elevatorEncoderChannelA = 0;
 	public static final int elevatorEncoderChannelB = 1;
-	public static final int elevatorLimitSwitch = 5;
+	public static final int elevatorTopLimitSwitch = 5;
+	public static final int elevatorBottomLimitSwitch = 6;
 }

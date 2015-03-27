@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.kauailabs.nav6.frc.IMU;
 import com.kauailabs.navx_mxp.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 

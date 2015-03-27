@@ -24,6 +24,7 @@ public class Elevator extends PIDSubsystem {
 	private Talon mTalon2;
 	private Encoder mEncoder;
 	private DigitalInput mLimitSwitch;
+	private DigitalInput mTopLimitSwitch;
 	
 	// Flags and other internals
 	private int mLevel = 0;// specifies height of elevator
@@ -36,6 +37,7 @@ public class Elevator extends PIDSubsystem {
 		mTalon1 = new Talon(RobotMap.elevatorMotor1);	
 		mTalon2 = new Talon(RobotMap.elevatorMotor2);
 		mLimitSwitch = new DigitalInput(RobotMap.elevatorBottomLimitSwitch);
+		mTopLimitSwitch = new DigitalInput(RobotMap.elevatorTopLimitSwitch);
 		mEncoder = new Encoder(RobotMap.elevatorEncoderChannelA, RobotMap.elevatorEncoderChannelB);		
 		
 		mEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
@@ -91,6 +93,10 @@ public class Elevator extends PIDSubsystem {
 	public boolean isAtBottom() {
 
 		return mLimitSwitch.get();
+	}
+	
+	public boolean isAtTop(){
+		return mTopLimitSwitch.get();
 	}
 	
 	public void setSpeed(double speed) {

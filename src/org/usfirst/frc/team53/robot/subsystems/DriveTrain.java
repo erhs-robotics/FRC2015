@@ -16,7 +16,7 @@ public class DriveTrain extends PIDSubsystem {
 	// Constants
 	private static final double KP = 2, KI = 0.02, KD = 0;// PID constants
 	private static final double PID_SCALE = 0.01;// so we have enough sigfigs tuning PID in livewindow
-	private static final double NORMAL_SPEED = 0.5;
+	private static final double NORMAL_SPEED = 0.6;
 	private static final double SLOW_SPEED = 0.3;
 	
 	// Electronics Objects
@@ -69,6 +69,10 @@ public class DriveTrain extends PIDSubsystem {
 		else
 			mRobotDrive.mecanumDrive_Cartesian(x*mMaxSpeed, y*mMaxSpeed, mRotation, 0);
 		
+	}
+	
+	public void mecanumDrivePID(double x, double y) {
+		mRobotDrive.mecanumDrive_Cartesian(x, y, mRotation, 0);		
 	}
 	
 	public void setSpeedSlow() {

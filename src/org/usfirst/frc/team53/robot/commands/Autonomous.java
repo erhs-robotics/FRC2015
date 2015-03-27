@@ -19,7 +19,7 @@ public class Autonomous extends CommandGroupX {
 		addSequential(Utils.delay(1.5));
 		*/	
 		
-		addSequential(() -> Robot.driveTrain.mRobotDrive.mecanumDrive_Polar(0.8, 0, 0));
+		//addSequential(() -> Robot.driveTrain.mRobotDrive.mecanumDrive_Polar(0.8, 0, 0));
 		addSequential(new Command() {
 			double mStartTime;
 			double mDelta;
@@ -28,16 +28,16 @@ public class Autonomous extends CommandGroupX {
 			@Override
 			protected void interrupted() { }			
 			@Override
-			protected void initialize() { 
-				mStartTime = Timer.getFPGATimestamp();
+			protected void initialize() {				
 				mDelta = Robot.autoSelector.get() ? NO_BUMP_DELTA : BUMP_DELTA;
 				System.out.println("Delta: " + mDelta);
-			}			
+				mStartTime = Timer.getFPGATimestamp();
+			}
 			@Override
-			protected void execute() { }			
+			protected void execute() { Robot.driveTrain.mecanumDrivePID(0.8, 0);}			
 			@Override
-			protected void end() { }
+			protected void end() { Robot.driveTrain.mRobotDrive.mecanumDrive_Polar(0, 0, 0);}
 		});
-		addSequential(() -> Robot.driveTrain.mRobotDrive.mecanumDrive_Polar(0, 0, 0));
+		
 	}
 }

@@ -28,16 +28,18 @@ public class OI {
 			button4.whenPressed(Robot.claw::close);
 		}
 		
-		if(Robot.driveTrain != null) {		
-			button1.whenPressed(() -> Robot.driveTrain.setManualMode());
-			button1.whenReleased(() -> Robot.driveTrain.setPIDMode());
-			button2.whenPressed(() -> Robot.driveTrain.togglePID());
+		if(Robot.driveTrain != null) {	
+			SmartDashboardX.putData("Drivetrain: Set Rotate Mode", Robot.driveTrain::setManualMode);
+			SmartDashboardX.putData("DriveTrain: Set Drive Mode", Robot.driveTrain::setPIDMode);
+			button1.whenPressed(Robot.driveTrain::setManualMode);
+			button1.whenReleased(Robot.driveTrain::setPIDMode);
+			button2.whenPressed(Robot.driveTrain::togglePID);
 		}
 		
 		if(Robot.elevator != null) {
-			button5.whenPressed(() -> Robot.elevator.decrementLevel());
-			button6.whenPressed(() -> Robot.elevator.incrementLevel());
-			button7.whenPressed(() -> Robot.elevator.toggleMode());
+			button5.whenPressed(Robot.elevator::decrementLevel);
+			button6.whenPressed(Robot.elevator::incrementLevel);
+			button7.whenPressed(Robot.elevator::toggleMode);
 		}		
 	}
 }

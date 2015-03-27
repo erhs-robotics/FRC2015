@@ -32,9 +32,10 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		compressor = new Compressor();
 		elevator = new Elevator();
-		//compressor.stop();		
+		//compressor.stop();
 		
 		SmartDashboard.putData("Elevator", elevator);
+		SmartDashboard.putData("Scheduler", Scheduler.getInstance());
         // instantiate the command used for the autonomous period
         autonomousCommand = null;
     }

@@ -19,10 +19,9 @@ public class Elevator extends PIDSubsystem {
 	private static final double DISTANCE_PER_PULSE = 0.001;	
 	private static int level = 0;
 	private static int mode = 0;
-	private static final double ELEVATOR_LEVELS[][] = {
-		{0.0, 1.0, 2.0, 3.0, 4},  // Tote levels
-		{0.3, 1.3, 2.3, 3.3, 4}}; // Stacking levels
-	
+	private static final double ELEVATOR_LEVELS[][] = { {0.0, 1.0, 2.0, 3.0, 4},  // Tote levels
+														{0.3, 1.3, 2.3, 3.3, 4}}; // Stacking levels
+													
 	
 	public Elevator() {
 		super(KP, KI, KD);
@@ -31,12 +30,14 @@ public class Elevator extends PIDSubsystem {
 		limitSwitch = new DigitalInput(RobotMap.elevatorLimitSwitch);
 		encoder = new Encoder(RobotMap.elevatorEncoderChannelA, RobotMap.elevatorEncoderChannelB);		
 		encoder.setDistancePerPulse(DISTANCE_PER_PULSE);		
-		
 		LiveWindow.addActuator("Elevator", "Talon1", talon1);
 		LiveWindow.addActuator("Elevator", "Talon2", talon2);
 		LiveWindow.addSensor("Elevator", "Encoder", encoder);
 		LiveWindow.addSensor("Elevator", "Limit Switch", limitSwitch);
 		LiveWindow.addActuator("Elevator", "PID", this.getPIDController());	
+		SmartDashboard.putNumber("Level: ", level);
+		SmartDashboard.putString("Mode: ", "Tote");
+		SmartDashboard.putString("Setpoint: ", "" + getSetpoint());
 		
 		setSetpoint(0);	
 	}
@@ -49,16 +50,24 @@ public class Elevator extends PIDSubsystem {
 		getPIDController().setSetpoint(set);
 	}
 	
-	public void toggleMode() {
-		mode = (mode == 0) ? 1 : 0;
+	public void toggleMode() {		
+		if(mode == 0) {
+			mode = 1;
+			SmartDashboard.putString("Mode: ", "Stacking");
+		} else {
+			mode = 0;
+			SmartDashboard.putString("Mode: ", "Tote");
+		}
 	}
 	
 	public void setToteLevelMode() {
 		mode = 0;
+		SmartDashboard.putString("Mode: ", "Tote");
 	}
 	
 	public void setStackLevelMode() {
 		mode = 1;
+		SmartDashboard.putString("Mode: ", "Stacking");
 	}
 	
 	public void incrementLevel() {
@@ -66,6 +75,7 @@ public class Elevator extends PIDSubsystem {
 		level = Math.max(level, 0);
 		level = Math.min(level, ELEVATOR_LEVELS[mode].length - 1);
 		setSetpoint(ELEVATOR_LEVELS[mode][level]);
+		SmartDashboard.putNumber("Level: ", level);
 	}
 	
 	public void decrementLevel() {
@@ -73,6 +83,7 @@ public class Elevator extends PIDSubsystem {
 		level = Math.max(level, 0);
 		level = Math.min(level, ELEVATOR_LEVELS[mode].length - 1);
 		setSetpoint(ELEVATOR_LEVELS[mode][level]);
+		SmartDashboard.putNumber("Level: ", level);
 	}	
 	
 	public boolean isAtBottom() {

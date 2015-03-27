@@ -19,7 +19,7 @@ public class DriveTrain extends PIDSubsystem {
 	public Gyro gyro;
 	private double rotation;
 	private static final double K = 0.01;
-	private boolean manualMode = false;
+	private boolean rotateMode = false;
 	
 	public DriveTrain() {		
 		super(kp, ki, kd);		
@@ -39,10 +39,13 @@ public class DriveTrain extends PIDSubsystem {
 		LiveWindow.addActuator("DriveTrain", "Gyro", gyro);
 		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
 		SmartDashboard.putData("Gyro", gyro);
+		SmartDashboard.putString("Drivetrain Mode: ", "Drive (PID Off)");
+		SmartDashboard.putData("Drivetrain PID", getPIDController());
 		setOutputRange(-0.5 / K, 0.5 / K);
 		setSetpoint(0);
-		//disable();
-		enable();
+		disable();
+		//enable();
+		
 	}
 	
 	public void mecanumDrive() {		
@@ -54,7 +57,7 @@ public class DriveTrain extends PIDSubsystem {
 		rot = rot*rot*rot;
 		rot = Math.min(rot, 0.4);
 		rot = Math.max(rot, -0.4);
-		if(manualMode)
+		if(rotateMode)
 			robotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
 		else
 			robotDrive.mecanumDrive_Cartesian(x*.6, y*.6, rotation, 0);
@@ -62,22 +65,26 @@ public class DriveTrain extends PIDSubsystem {
 	}
 	
 	public void setManualMode() {
-		manualMode = true;
+		rotateMode = true;
 		disable();
+		SmartDashboard.putString("Drivetrain Mode: ", "Rotate");
 	}
 	
 	public void setPIDMode() {
-		manualMode = false;
+		rotateMode = false;
 		setSetpoint(gyro.getAngle());
 		enable();
+		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
 	}
 	
 	public void togglePID() {
 		if(getPIDController().isEnable()) {
 			disable();
+			//SmartDashboard.putString(" ", "PI");
 		} else {
 			setSetpoint(gyro.getAngle());
 			enable();
+			//SmartDashboard.putString("Drivetrain Mode: ", "PID On");
 		}
 	}
 		

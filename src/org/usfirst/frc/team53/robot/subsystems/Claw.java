@@ -32,6 +32,14 @@ public class Claw extends Subsystem {
 		mDoubleSolenoid.set(Value.kOff);
 	}
 	
+	public void toggle() {
+		if(mDoubleSolenoid.get() == Value.kForward) {
+			close();
+		} else {
+			open();
+		}
+	}
+	
 	public Value getValue() {
 		return mDoubleSolenoid.get();
 	}

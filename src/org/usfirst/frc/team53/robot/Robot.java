@@ -1,12 +1,15 @@
 
 package org.usfirst.frc.team53.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc.team53.robot.commands.Autonomous;
 import org.usfirst.frc.team53.robot.subsystems.Claw;
 import org.usfirst.frc.team53.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team53.robot.subsystems.Elevator;
@@ -27,17 +30,20 @@ public class Robot extends IterativeRobot {
     
     public void robotInit() {
     	claw = new Claw();
-    	driveTrain = new DriveTrain();
-    	
-		oi = new OI();
+    	driveTrain = new DriveTrain();	
 		compressor = new Compressor();
 		elevator = new Elevator();
+		oi = new OI();
+		CameraServer server = CameraServer.getInstance();
+		server.setQuality(30);
+		server.startAutomaticCapture("cam0");
 		//compressor.stop();
 		
 		SmartDashboard.putData("Elevator", elevator);
 		SmartDashboard.putData("Scheduler", Scheduler.getInstance());
         // instantiate the command used for the autonomous period
-        autonomousCommand = null;
+        autonomousCommand = new Autonomous();
+        
     }
 	
 	public void disabledPeriodic() {
@@ -55,9 +61,11 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit() {		
         if (autonomousCommand != null) autonomousCommand.cancel();
+        Robot.driveTrain.mRobotDrive.arcadeDrive(0, 0);
+        driveTrain.setSetpoint(driveTrain.mGyro.getAngle());
     }
     
-    public void disabledInit(){
+    public void disabledInit() {
 
     }
 

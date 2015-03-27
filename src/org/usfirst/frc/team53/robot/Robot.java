@@ -3,7 +3,9 @@ package org.usfirst.frc.team53.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -25,6 +27,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static Compressor compressor;
 	public static Elevator elevator;
+	public static DigitalInput autoSelector;
 
     Command autonomousCommand;  
     
@@ -33,6 +36,7 @@ public class Robot extends IterativeRobot {
     	driveTrain = new DriveTrain();	
 		compressor = new Compressor();
 		elevator = new Elevator();
+		autoSelector = new DigitalInput(RobotMap.autoSelector);
 		oi = new OI();
 		CameraServer server = CameraServer.getInstance();
 		server.setQuality(30);

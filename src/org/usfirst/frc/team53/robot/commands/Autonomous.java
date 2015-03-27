@@ -16,7 +16,7 @@ public class Autonomous extends CommandGroupX {
 		addSequential(Utils.delay(1.5));
 		*/
 		addSequential(() -> Robot.driveTrain.mRobotDrive.mecanumDrive_Polar(0.8, 0, 0));
-		addSequential(Utils.delay(1.9));
+		addSequential(Utils.delay(2));
 		addSequential(() -> Robot.driveTrain.mRobotDrive.arcadeDrive(0, 0));
 	}
 }

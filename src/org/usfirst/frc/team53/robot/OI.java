@@ -19,7 +19,8 @@ public class OI {
 		JoystickButtonX button4 = new JoystickButtonX(stick, 4);// claw close		
 		JoystickButtonX button5 = new JoystickButtonX(stick, 5);// decrement elevator
 		JoystickButtonX button6 = new JoystickButtonX(stick, 6);// increment elevator
-		JoystickButtonX button7 = new JoystickButtonX(stick, 7);// elevator mode toggle		
+		JoystickButtonX button7 = new JoystickButtonX(stick, 7);// elevator toggle stack adjust
+		JoystickButtonX button8 = new JoystickButtonX(stick, 8);// elevator toggle hook adjust
 
 		if(Robot.claw != null) {
 			SmartDashboardX.putData("Open Claw", Robot.claw::open);
@@ -39,7 +40,8 @@ public class OI {
 		if(Robot.elevator != null) {
 			button5.whenPressed(Robot.elevator::decrementLevel);
 			button6.whenPressed(Robot.elevator::incrementLevel);
-			button7.whenPressed(Robot.elevator::toggleMode);
+			button7.whenPressed(Robot.elevator::toggleStackAdjust);
+			button8.whenPressed(Robot.elevator::toggleHookAdjust);
 		}		
 	}
 }

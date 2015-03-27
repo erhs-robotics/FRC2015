@@ -13,39 +13,43 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain extends PIDSubsystem {
 	
-	public RobotDrive robotDrive;	
-	private Talon driveTopLeft, driveTopRight, driveBottomLeft, driveBottomRight;
-	private static final double kp = 2, ki = 0.02, kd = 0;
-	public Gyro gyro;
-	private double rotation;
-	private static final double K = 0.01;
-	private boolean rotateMode = false;
+	// Constants
+	private static final double KP = 2, KI = 0.02, KD = 0;// PID constants
+	private static final double PID_SCALE = 0.01;// so we have enough sigfigs tuning PID in livewindow
+	
+	// Electronics Objects
+	public RobotDrive mRobotDrive;	
+	private Talon mDriveTopLeft, mDriveTopRight, mDriveBottomLeft, mDriveBottomRight;	
+	public Gyro mGyro;
+	
+	// Flags and other internals
+	private double mRotation;// rotation specified by PID
+	private boolean mRotateMode = false;// flag
 	
 	public DriveTrain() {		
-		super(kp, ki, kd);		
-		gyro = new Gyro(RobotMap.gyro);		
+		super(KP, KI, KD);		
 		
-		driveBottomLeft = new Talon(RobotMap.driveTrainBottomLeft);
-		driveBottomRight = new Talon(RobotMap.driveTrainBottomRight);
-		driveTopLeft = new Talon(RobotMap.driveTrainTopLeft);
-		driveTopRight = new Talon(RobotMap.driveTrainTopRight);
-		robotDrive = new RobotDrive(driveTopLeft, driveBottomLeft, driveTopRight, driveBottomRight);
-		robotDrive.setInvertedMotor(MotorType.kFrontRight, true);
-		robotDrive.setInvertedMotor(MotorType.kRearRight, true);
-		LiveWindow.addActuator("DriveTrain", "Bottom Left", driveBottomLeft);
-		LiveWindow.addActuator("DriveTrain", "Bottom Right", driveBottomRight);
-		LiveWindow.addActuator("DriveTrain", "Top Left", driveTopLeft);
-		LiveWindow.addActuator("DriveTrain", "Top Right", driveTopRight);
-		LiveWindow.addActuator("DriveTrain", "Gyro", gyro);
-		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
-		SmartDashboard.putData("Gyro", gyro);
-		SmartDashboard.putString("Drivetrain Mode: ", "Drive (PID Off)");
-		SmartDashboard.putData("Drivetrain PID", getPIDController());
-		setOutputRange(-0.5 / K, 0.5 / K);
-		setSetpoint(0);
+		mGyro = new Gyro(RobotMap.gyro);	
+		mDriveBottomLeft = new Talon(RobotMap.driveTrainBottomLeft);
+		mDriveBottomRight = new Talon(RobotMap.driveTrainBottomRight);
+		mDriveTopLeft = new Talon(RobotMap.driveTrainTopLeft);
+		mDriveTopRight = new Talon(RobotMap.driveTrainTopRight);
+		mRobotDrive = new RobotDrive(mDriveTopLeft, mDriveBottomLeft, mDriveTopRight, mDriveBottomRight);
+		mRobotDrive.setInvertedMotor(MotorType.kFrontRight, true);
+		mRobotDrive.setInvertedMotor(MotorType.kRearRight, true);
+		
+		setOutputRange(-0.5 / PID_SCALE, 0.5 / PID_SCALE);
+		setSetpoint(mGyro.getAngle());
 		disable();
-		//enable();
 		
+		LiveWindow.addActuator("DriveTrain", "Bottom Left", mDriveBottomLeft);
+		LiveWindow.addActuator("DriveTrain", "Bottom Right", mDriveBottomRight);
+		LiveWindow.addActuator("DriveTrain", "Top Left", mDriveTopLeft);
+		LiveWindow.addActuator("DriveTrain", "Top Right", mDriveTopRight);
+		LiveWindow.addActuator("DriveTrain", "Gyro", mGyro);
+		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
+		SmartDashboard.putData("Gyro", mGyro);
+		SmartDashboard.putString("Drivetrain Mode: ", "Drive");				
 	}
 	
 	public void mecanumDrive() {		
@@ -57,49 +61,45 @@ public class DriveTrain extends PIDSubsystem {
 		rot = rot*rot*rot;
 		rot = Math.min(rot, 0.4);
 		rot = Math.max(rot, -0.4);
-		if(rotateMode)
-			robotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
+		if(mRotateMode)
+			mRobotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
 		else
-			robotDrive.mecanumDrive_Cartesian(x*.6, y*.6, rotation, 0);
+			mRobotDrive.mecanumDrive_Cartesian(x*.6, y*.6, mRotation, 0);
 		
 	}
 	
 	public void setManualMode() {
-		rotateMode = true;
+		mRotateMode = true;
 		disable();
 		SmartDashboard.putString("Drivetrain Mode: ", "Rotate");
 	}
 	
 	public void setPIDMode() {
-		rotateMode = false;
-		setSetpoint(gyro.getAngle());
+		mRotateMode = false;
+		setSetpoint(mGyro.getAngle());
 		enable();
 		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
 	}
 	
 	public void togglePID() {
 		if(getPIDController().isEnable()) {
-			disable();
-			//SmartDashboard.putString(" ", "PI");
+			disable();			
 		} else {
-			setSetpoint(gyro.getAngle());
-			enable();
-			//SmartDashboard.putString("Drivetrain Mode: ", "PID On");
+			setSetpoint(mGyro.getAngle());
+			enable();			
 		}
-	}
-		
+	}		
 
 	@Override
-	protected void initDefaultCommand() {		
-	}
+	protected void initDefaultCommand() { }
 
 	@Override
 	protected double returnPIDInput() {		
-		return gyro.getAngle();
+		return mGyro.getAngle();
 	}
 
 	@Override
 	protected void usePIDOutput(double output) {		
-		rotation = output * K;		
+		mRotation = output * PID_SCALE;		
 	}
 }

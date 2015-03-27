@@ -26,8 +26,7 @@ public class Elevator extends PIDSubsystem {
 	// Flags and other internals
 	private int mLevel = 0;// specifies height of elevator
 	private boolean mStackAdjust = false;// flag
-	private boolean mHookAdjust = false;// flag
-												
+	private boolean mHookAdjust = false;// flag												
 	
 	public Elevator() {
 		super(KP, KI, KD);
@@ -59,6 +58,14 @@ public class Elevator extends PIDSubsystem {
 	
 	public void toggleHookAdjust() {
 		mHookAdjust = !mHookAdjust;
+		updateDashboard();
+	}
+	
+	public void setLevel(int level) {
+		mLevel = level;
+		mLevel = Math.max(mLevel, 0);
+		mLevel = Math.min(mLevel, ELEVATOR_LEVELS.length - 1);
+		updateSetpoint();
 		updateDashboard();
 	}
 	

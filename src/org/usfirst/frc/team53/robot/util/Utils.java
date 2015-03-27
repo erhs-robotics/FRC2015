@@ -16,4 +16,9 @@ public class Utils {
 			protected void end() { }
 		};
 	}
+	
+	public static Command r2c(Runnable run) {
+		return runnable2Command(run);
+	}
+	
 }

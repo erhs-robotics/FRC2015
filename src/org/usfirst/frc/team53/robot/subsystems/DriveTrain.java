@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.kauailabs.nav6.frc.IMU;
+import com.kauailabs.navx_mxp.AHRS;
+import edu.wpi.first.wpilibj.SerialPort;
+
 public class DriveTrain extends PIDSubsystem {
 	
 	// Constants
@@ -20,7 +24,8 @@ public class DriveTrain extends PIDSubsystem {
 	// Electronics Objects
 	public RobotDrive mRobotDrive;	
 	private Talon mDriveTopLeft, mDriveTopRight, mDriveBottomLeft, mDriveBottomRight;	
-	public Gyro mGyro;
+	public AHRS mGyro;
+	private SerialPort gyroSerial;
 	
 	// Flags and other internals
 	private double mRotation;// rotation specified by PID
@@ -29,7 +34,8 @@ public class DriveTrain extends PIDSubsystem {
 	public DriveTrain() {		
 		super(KP, KI, KD);		
 		
-		mGyro = new Gyro(RobotMap.gyro);	
+		gyroSerial = new SerialPort(60, SerialPort.Port.kMXP); //keep this as default in AHRS.java
+		mGyro = new AHRS(gyroSerial);
 		mDriveBottomLeft = new Talon(RobotMap.driveTrainBottomLeft);
 		mDriveBottomRight = new Talon(RobotMap.driveTrainBottomRight);
 		mDriveTopLeft = new Talon(RobotMap.driveTrainTopLeft);
@@ -39,7 +45,7 @@ public class DriveTrain extends PIDSubsystem {
 		mRobotDrive.setInvertedMotor(MotorType.kRearRight, true);
 		
 		setOutputRange(-0.5 / PID_SCALE, 0.5 / PID_SCALE);
-		setSetpoint(mGyro.getAngle());
+		setSetpoint(mGyro.getFusedHeading());
 		disable();
 		
 		LiveWindow.addActuator("DriveTrain", "Bottom Left", mDriveBottomLeft);
@@ -76,7 +82,7 @@ public class DriveTrain extends PIDSubsystem {
 	
 	public void setPIDMode() {
 		mRotateMode = false;
-		setSetpoint(mGyro.getAngle());
+		setSetpoint(mGyro.getFusedHeading());
 		enable();
 		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
 	}
@@ -85,7 +91,7 @@ public class DriveTrain extends PIDSubsystem {
 		if(getPIDController().isEnable()) {
 			disable();			
 		} else {
-			setSetpoint(mGyro.getAngle());
+			setSetpoint(mGyro.getFusedHeading());
 			enable();			
 		}
 	}		
@@ -95,7 +101,7 @@ public class DriveTrain extends PIDSubsystem {
 
 	@Override
 	protected double returnPIDInput() {		
-		return mGyro.getAngle();
+		return mGyro.getFusedHeading();
 	}
 
 	@Override

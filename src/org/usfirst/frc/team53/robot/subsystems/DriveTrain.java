@@ -34,8 +34,8 @@ public class DriveTrain extends PIDSubsystem {
 	public DriveTrain() {		
 		super(KP, KI, KD);		
 		
-		gyroSerial = new SerialPort(60, SerialPort.Port.kMXP); //keep this as default in AHRS.java
-		mGyro = new AHRS(gyroSerial);
+		gyroSerial = new SerialPort(57600, SerialPort.Port.kMXP); 
+		mGyro = new AHRS(gyroSerial, (byte) 60);
 		mDriveBottomLeft = new Talon(RobotMap.driveTrainBottomLeft);
 		mDriveBottomRight = new Talon(RobotMap.driveTrainBottomRight);
 		mDriveTopLeft = new Talon(RobotMap.driveTrainTopLeft);
@@ -45,7 +45,7 @@ public class DriveTrain extends PIDSubsystem {
 		mRobotDrive.setInvertedMotor(MotorType.kRearRight, true);
 		
 		setOutputRange(-0.5 / PID_SCALE, 0.5 / PID_SCALE);
-		setSetpoint(mGyro.getFusedHeading());
+		setSetpoint(mGyro.getYaw());
 		disable();
 		
 		LiveWindow.addActuator("DriveTrain", "Bottom Left", mDriveBottomLeft);
@@ -82,7 +82,7 @@ public class DriveTrain extends PIDSubsystem {
 	
 	public void setPIDMode() {
 		mRotateMode = false;
-		setSetpoint(mGyro.getFusedHeading());
+		setSetpoint(mGyro.getYaw());
 		enable();
 		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
 	}
@@ -91,7 +91,7 @@ public class DriveTrain extends PIDSubsystem {
 		if(getPIDController().isEnable()) {
 			disable();			
 		} else {
-			setSetpoint(mGyro.getFusedHeading());
+			setSetpoint(mGyro.getYaw());
 			enable();			
 		}
 	}		
@@ -101,7 +101,7 @@ public class DriveTrain extends PIDSubsystem {
 
 	@Override
 	protected double returnPIDInput() {		
-		return mGyro.getFusedHeading();
+		return mGyro.getYaw();
 	}
 
 	@Override

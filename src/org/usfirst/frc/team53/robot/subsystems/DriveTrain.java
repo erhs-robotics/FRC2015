@@ -19,6 +19,7 @@ public class DriveTrain extends PIDSubsystem {
 	// Constants
 	private static final double KP = 2, KI = 0.02, KD = 0;// PID constants
 	private static final double PID_SCALE = 0.01;// so we have enough sigfigs tuning PID in livewindow
+	private static final double AUTO_DRIVE_DIST = 10.0;
 	
 	// Electronics Objects
 	public RobotDrive mRobotDrive;	
@@ -114,5 +115,11 @@ public class DriveTrain extends PIDSubsystem {
 	
 	public float getYDisplacement(){
 		return mGyro.getDisplacementY();
+	}
+	
+	public void intelligentAuto(){
+		while(getXDisplacement()>AUTO_DRIVE_DIST){
+			mRobotDrive.mecanumDrive_Cartesian(-0.4, 0, 0, mGyro.getYaw());
+		}
 	}
 }

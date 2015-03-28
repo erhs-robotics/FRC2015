@@ -107,4 +107,12 @@ public class DriveTrain extends PIDSubsystem {
 	protected void usePIDOutput(double output) {		
 		mRotation = output * PID_SCALE;		
 	}
+	
+	public float getXDisplacement(){
+		return mGyro.getDisplacementX();
+	}
+	
+	public float getYDisplacement(){
+		return mGyro.getDisplacementY();
+	}
 }

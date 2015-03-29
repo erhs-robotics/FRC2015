@@ -27,6 +27,7 @@ public class RobotMap {
 	
 	// Analog In	
 	public static int gyro = 0;
+	public static int rangefinder = 1;
 	
 	// Solenoid
 	public static int clawSolenoid1 = 1;

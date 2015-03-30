@@ -25,7 +25,7 @@ public class DriveTrain extends PIDSubsystem {
 	public Gyro mGyro;
 	
 	// Flags and other internals
-	private double mRotation;// rotation specified by PID
+	private double mRotation = 0;// rotation specified by PID
 	private boolean mRotateMode = false;// flag
 	private double mMaxSpeed = NORMAL_SPEED;
 	
@@ -52,7 +52,8 @@ public class DriveTrain extends PIDSubsystem {
 		LiveWindow.addActuator("DriveTrain", "Gyro", mGyro);
 		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
 		SmartDashboard.putData("Gyro", mGyro);
-		SmartDashboard.putString("Drivetrain Mode: ", "Drive");		
+		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
+		disable();
 	}
 	
 	public void mecanumDrive() {		
@@ -89,10 +90,10 @@ public class DriveTrain extends PIDSubsystem {
 		SmartDashboard.putString("Drivetrain Mode: ", "Rotate");
 	}
 	
-	public void setPIDMode() {
-		mRotateMode = false;
+	public void setDriveMode() {
 		setSetpoint(mGyro.getAngle());
-		enable();
+		mRotateMode = false;
+		//enable();
 		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
 	}
 	

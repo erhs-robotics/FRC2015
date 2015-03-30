@@ -28,7 +28,8 @@ public class Robot extends IterativeRobot {
 	public static Compressor compressor;
 	public static Elevator elevator;
 	public static DigitalInput autoSelector;
-
+	
+	private static boolean hasAutoRun = false;
     Command autonomousCommand;  
     
     public void robotInit() {
@@ -55,8 +56,11 @@ public class Robot extends IterativeRobot {
 	}
 
     public void autonomousInit() {
-        // schedule the autonomous command (example)
-        if (autonomousCommand != null) autonomousCommand.start();
+    	if(!hasAutoRun) {
+    		hasAutoRun = true;
+	        // schedule the autonomous command (example)
+	        if (autonomousCommand != null) autonomousCommand.start();
+    	}
     }
     
     public void autonomousPeriodic() {
@@ -76,6 +80,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         driveTrain.mecanumDrive();
+        System.out.println(driveTrain.mGyro.getAngle());
     }    
       
     public void testPeriodic() {

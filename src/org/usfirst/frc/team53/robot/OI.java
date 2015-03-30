@@ -33,9 +33,9 @@ public class OI {
 		
 		if(Robot.driveTrain != null) {	
 			SmartDashboardX.putData("Drivetrain: Set Rotate Mode", Robot.driveTrain::setManualMode);
-			SmartDashboardX.putData("DriveTrain: Set Drive Mode", Robot.driveTrain::setPIDMode);
+			SmartDashboardX.putData("DriveTrain: Set Drive Mode", Robot.driveTrain::setDriveMode);
 			toggleDriveModeB.whenPressed(Robot.driveTrain::setManualMode);
-			toggleDriveModeB.whenReleased(Robot.driveTrain::setPIDMode);
+			toggleDriveModeB.whenReleased(Robot.driveTrain::setDriveMode);
 			toggleDrivePID_B.whenPressed(Robot.driveTrain::togglePID);
 			driveSlowB.whenPressed(Robot.driveTrain::setSpeedSlow);
 			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);

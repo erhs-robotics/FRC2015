@@ -17,14 +17,15 @@ public class DriveTrain extends PIDSubsystem {
 	// Constants
 	private static final double KP = 2, KI = 0.02, KD = 0;// PID constants
 	private static final double PID_SCALE = 0.01;// so we have enough sigfigs tuning PID in livewindow
-	private static final double RANGEFINDER_SCALE_INCHES = (1/(5/512.0)); // 1/(Vcc/512) * data
-	private static final double RANGEFINDER_SCALE_TOTES = RANGEFINDER_SCALE_INCHES * (1/27); // scale to tote lengths
+	private static final double SONAR_SCALE_INCHES = (1/(5/512.0)); // 1/(Vcc/512) * data
+	private static final double SONAR_SCALE_TOTES = SONAR_SCALE_INCHES * (1/27); // scale to tote lengths
 		
 	// Electronics Objects
 	public RobotDrive mRobotDrive;	
 	private Talon mDriveTopLeft, mDriveTopRight, mDriveBottomLeft, mDriveBottomRight;	
 	public Gyro mGyro;
-	public AnalogInput mRangefinder;
+	public AnalogInput mSonarLeft;
+	public AnalogInput mSonarRight;
 	
 	// Flags and other internals
 	private double mRotation;// rotation specified by PID
@@ -34,7 +35,8 @@ public class DriveTrain extends PIDSubsystem {
 		super(KP, KI, KD);		
 		
 		mGyro = new Gyro(RobotMap.gyro);	
-		mRangefinder = new AnalogInput(RobotMap.rangefinder);
+		mSonarLeft = new AnalogInput(RobotMap.sonarLeft);
+		mSonarRight = new AnalogInput(RobotMap.sonarRight);
 		mDriveBottomLeft = new Talon(RobotMap.driveTrainBottomLeft);
 		mDriveBottomRight = new Talon(RobotMap.driveTrainBottomRight);
 		mDriveTopLeft = new Talon(RobotMap.driveTrainTopLeft);
@@ -55,8 +57,7 @@ public class DriveTrain extends PIDSubsystem {
 		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
 		SmartDashboard.putData("Gyro", mGyro);
 		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
-		SmartDashboard.putNumber("Rangefinder (totes)", getRangefinderDistTotes());
-		SmartDashboard.putNumber("Rangefinder (inches)", getRangefinderDistInches());
+		SmartDashboard.putNumber("Sonar (inches)", getCenterSonarDist());
 	}
 	
 	public void mecanumDrive() {		
@@ -110,11 +111,20 @@ public class DriveTrain extends PIDSubsystem {
 		mRotation = output * PID_SCALE;		
 	}
 	
-	public double getRangefinderDistInches(){
-		return mRangefinder.getVoltage()*(RANGEFINDER_SCALE_INCHES);
+	public double getLeftSonarDist(){
+		return mSonarLeft.getVoltage() * SONAR_SCALE_INCHES; 
 	}
 	
-	public double getRangefinderDistTotes(){
-		return getRangefinderDistInches() * RANGEFINDER_SCALE_TOTES;
+	public double getRightSonarDist(){
+		return mSonarRight.getVoltage() * SONAR_SCALE_INCHES; 
+	}
+	
+	public double getSonarRotation(){
+		double opposite = getLeftSonarDist()-getCenterSonarDist();
+		return Math.asin(opposite);
+	}
+	
+	public double getCenterSonarDist(){
+		return (getLeftSonarDist() + getRightSonarDist())/2;
 	}
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+
 public class Elevator extends PIDSubsystem {	
 	
 	// Constants
@@ -16,12 +17,15 @@ public class Elevator extends PIDSubsystem {
 	private static final double STACK_ADJUST = 0.9;// move the elevator up by this when stacking
 	private static final double HOOK_ADJUST = 0.3;// move the elevator up by this when using hooks
 	private static final double ELEVATOR_LEVELS[] = {0.00, 0.90, 1.85, 2.65, 3.45};// Tote levels
+
 	
 	// Electronics Objects
 	private Talon mTalon1;
 	private Talon mTalon2;
 	private Encoder mEncoder;
-	//private DigitalInput mLimitSwitch;
+
+	private DigitalInput mLimitSwitch;
+	private DigitalInput mTopLimitSwitch;
 	
 	// Flags and other internals
 	private int mLevel = 0;// specifies height of elevator
@@ -33,11 +37,14 @@ public class Elevator extends PIDSubsystem {
 		
 		mTalon1 = new Talon(RobotMap.elevatorMotor1);	
 		mTalon2 = new Talon(RobotMap.elevatorMotor2);
-		//mLimitSwitch = new DigitalInput(RobotMap.elevatorLimitSwitch);
+		mLimitSwitch = new DigitalInput(RobotMap.elevatorBottomLimitSwitch);
+		mTopLimitSwitch = new DigitalInput(RobotMap.elevatorTopLimitSwitch);
+
 		mEncoder = new Encoder(RobotMap.elevatorEncoderChannelA, RobotMap.elevatorEncoderChannelB);		
 		
 		mEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 		setSetpoint(0);
+
 		
 		LiveWindow.addActuator("Elevator", "Talon1", mTalon1);
 		LiveWindow.addActuator("Elevator", "Talon2", mTalon2);
@@ -92,6 +99,16 @@ public class Elevator extends PIDSubsystem {
 		updateDashboard();
 	}
 	
+
+	
+	public boolean isAtBottom() {
+		return mLimitSwitch.get();
+	}
+	
+	public boolean isAtTop(){
+		return mTopLimitSwitch.get();
+	}
+
 	
 	public void setSpeed(double speed) {
 		if(!this.getPIDController().isEnable()) {

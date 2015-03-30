@@ -3,6 +3,7 @@ package org.usfirst.frc.team53.robot.subsystems;
 import org.usfirst.frc.team53.robot.OI;
 import org.usfirst.frc.team53.robot.RobotMap;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
@@ -18,11 +19,15 @@ public class DriveTrain extends PIDSubsystem {
 	private static final double PID_SCALE = 0.01;// so we have enough sigfigs tuning PID in livewindow
 	private static final double NORMAL_SPEED = 0.6;
 	private static final double SLOW_SPEED = 0.3;
+	private static final double SONAR_SCALE_INCHES = (1/(5/512.0)); // 1/(Vcc/512) * data
+	private static final double SONAR_SCALE_TOTES = SONAR_SCALE_INCHES * (1/27); // scale to tote lengths
 	
 	// Electronics Objects
 	public RobotDrive mRobotDrive;	
 	private Talon mDriveTopLeft, mDriveTopRight, mDriveBottomLeft, mDriveBottomRight;	
 	public Gyro mGyro;
+	public AnalogInput mSonarLeft;
+	public AnalogInput mSonarRight;
 	
 	// Flags and other internals
 	private double mRotation = 0;// rotation specified by PID
@@ -33,6 +38,8 @@ public class DriveTrain extends PIDSubsystem {
 		super(KP, KI, KD);		
 		
 		mGyro = new Gyro(RobotMap.gyro);	
+		mSonarLeft = new AnalogInput(RobotMap.sonarLeft);
+		mSonarRight = new AnalogInput(RobotMap.sonarRight);
 		mDriveBottomLeft = new Talon(RobotMap.driveTrainBottomLeft);
 		mDriveBottomRight = new Talon(RobotMap.driveTrainBottomRight);
 		mDriveTopLeft = new Talon(RobotMap.driveTrainTopLeft);
@@ -43,8 +50,10 @@ public class DriveTrain extends PIDSubsystem {
 		mRobotDrive.setSafetyEnabled(false);
 		
 		setOutputRange(-0.5 / PID_SCALE, 0.5 / PID_SCALE);
+
 		setSetpoint(mGyro.getAngle());		
-		
+
+		disable();
 		LiveWindow.addActuator("DriveTrain", "Bottom Left", mDriveBottomLeft);
 		LiveWindow.addActuator("DriveTrain", "Bottom Right", mDriveBottomRight);
 		LiveWindow.addActuator("DriveTrain", "Top Left", mDriveTopLeft);
@@ -53,7 +62,7 @@ public class DriveTrain extends PIDSubsystem {
 		LiveWindow.addActuator("DriveTrain", "PID", getPIDController());
 		SmartDashboard.putData("Gyro", mGyro);
 		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
-		disable();
+		SmartDashboard.putNumber("Sonar (inches)", getCenterSonarDist());
 	}
 	
 	public void mecanumDrive() {		
@@ -117,5 +126,22 @@ public class DriveTrain extends PIDSubsystem {
 	@Override
 	protected void usePIDOutput(double output) {		
 		mRotation = output * PID_SCALE;		
+	}
+	
+	public double getLeftSonarDist(){
+		return mSonarLeft.getVoltage() * SONAR_SCALE_INCHES; 
+	}
+	
+	public double getRightSonarDist(){
+		return mSonarRight.getVoltage() * SONAR_SCALE_INCHES; 
+	}
+	
+	public double getSonarRotation(){
+		double opposite = getLeftSonarDist()-getCenterSonarDist();
+		return Math.asin(opposite);
+	}
+	
+	public double getCenterSonarDist(){
+		return (getLeftSonarDist() + getRightSonarDist())/2;
 	}
 }

@@ -28,6 +28,8 @@ public class RobotMap {
 	// Analog In	
 	public static int gyro = 0;
 	public static int autoSelector = 9;
+	public static int sonarLeft = 1;
+	public static int sonarRight = 2;
 	
 	// Solenoid
 	public static int clawSolenoid1 = 1;
@@ -36,5 +38,6 @@ public class RobotMap {
 	// Digital
 	public static final int elevatorEncoderChannelA = 0;
 	public static final int elevatorEncoderChannelB = 1;
-	public static final int elevatorLimitSwitch = 5;
+	public static final int elevatorTopLimitSwitch = 5;
+	public static final int elevatorBottomLimitSwitch = 6;
 }

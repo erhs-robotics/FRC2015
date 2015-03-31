@@ -120,8 +120,7 @@ public class DriveTrain extends PIDSubsystem {
 	}
 	
 	public double getSonarRotation(){
-		double opposite = getLeftSonarDist()-getCenterSonarDist();
-		return Math.asin(opposite);
+		return Math.asin(getLeftSonarDist()-getCenterSonarDist());
 	}
 	
 	public double getCenterSonarDist(){

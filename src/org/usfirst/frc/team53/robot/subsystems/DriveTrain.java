@@ -22,8 +22,8 @@ public class DriveTrain extends PIDSubsystem {
 	private static final double FAST_SPEED   = 1.0;
 	private static final double NORMAL_SPEED = 0.6;
 	private static final double SLOW_SPEED = 0.3;
-	private static final double SONAR_SCALE_INCHES = (1/(5/512.0)); // 1/(Vcc/512) * data
-	private static final double SONAR_SCALE_TOTES = SONAR_SCALE_INCHES * (1/27); // scale to tote lengths
+	private static final double SONAR_A = 1.684065934;
+	private static final double SONAR_B = 7.351648352;
 	private static final double SONAR_DISPARITY = 24; // in inches
 	private static final double TOTE_DISTANCE = 30; // in inches
 	
@@ -143,12 +143,17 @@ public class DriveTrain extends PIDSubsystem {
 		mRotation = output * PID_SCALE;		
 	}
 	
+	private double voltage2distance(double voltage) {
+		return voltage * SONAR_A + SONAR_B;
+	}
+	
 	public double getLeftSonarDist() {
-		return mSonarLeft.getVoltage() * SONAR_SCALE_INCHES; 
+		
+		return voltage2distance(mSonarLeft.getVoltage()); 
 	}
 	
 	public double getRightSonarDist() {
-		return mSonarRight.getVoltage() * SONAR_SCALE_INCHES; 
+		return voltage2distance(mSonarRight.getVoltage()); 
 	}
 
 	public double getSonarRotation() {

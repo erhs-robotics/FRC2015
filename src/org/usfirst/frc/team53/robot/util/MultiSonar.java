@@ -1,22 +1,28 @@
 package org.usfirst.frc.team53.robot.util;
 
 import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class MultiSonar {
 	private ArrayList<AnalogInput> sonar;
 	private double scaleFactor;
+	private DigitalOutput pulsePin;
 	
-	public MultiSonar(int sensors, double scaleFactor, ArrayList<Integer> pins){
+	public MultiSonar(int numSensors, int pulsePin, double scaleFactor, ArrayList<Integer> pins){
+		assert numSensors == pins.size();
+		this.pulsePin = new DigitalOutput(pulsePin);
 		pins.forEach((pin) -> this.sonar.add(new AnalogInput(pin)));
 		this.scaleFactor = scaleFactor;
 	}
 	
 	public double getSonar(int index){
-		return this.sonar.get(index).getVoltage()*this.scaleFactor;
+		return this.getRawSonar(index)*this.scaleFactor;
 	}
 	
 	public double getRawSonar(int index){
+		
 		return this.sonar.get(index).getVoltage();
 	}
 	

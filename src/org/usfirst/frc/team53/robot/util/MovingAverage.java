@@ -37,5 +37,19 @@ public class MovingAverage {
         }        
         
         return sum / list.size();
-    }   
+    }
+    
+    public static void main(String[] args) { 
+    	MovingAverage average = new MovingAverage(4);
+    	average.filter(1);    	
+    	double x  = average.filter(2);    	
+    	assert x == (1. + 2.) / 2.;
+    	average.filter(10);
+    	average.filter(1);
+    	average.filter(1);
+    	average.filter(1);
+    	assert average.filter(1) == 1;
+    	System.out.print("All tests passed!");
+    	
+    }
 }

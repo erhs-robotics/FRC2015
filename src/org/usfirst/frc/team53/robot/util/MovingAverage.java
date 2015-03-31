@@ -1,4 +1,5 @@
 package org.usfirst.frc.team53.robot.util;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,23 +13,13 @@ import java.util.List;
  * @author michael
  */
 public class MovingAverage {
-
-    public double[] memory;
-    private LinkedList<Double> list = new LinkedList<Double>();
-    private double[] w;
-    private double w_sum;
+    
+    private LinkedList<Double> list = new LinkedList<Double>();    
     private final int mSize;
     
     public MovingAverage(final int size) {
     	mSize = size;
     }   
-
-    private void move(double x, int i) {
-        double buf = memory[i];
-        memory[i] = x;
-        if (i == 0) return;        
-        move(buf, i - 1);
-    }
 
     public double filter(double x) {
     	if(list.size() == mSize) {
@@ -37,23 +28,14 @@ public class MovingAverage {
 	    	list.add(first);
     	} else {
     		list.add(x);
-    	}
+    	} 
     	
-        double sum = x;
-        for (int i = 0; i < memory.length; i++) {
-            
-            sum += memory[i];
-        }
-        move(x, memory.length - 1);
-        return sum / (memory.length + 1);
-    }
-
-    public double weightedFilter(double x) {
-        double sum = x * w[w.length - 1];
-        for (int i = 0; i < memory.length; i++) {
-            sum += memory[i] * w[i];
-        }
-        move(x, memory.length - 1);
-        return sum / w_sum;
-    }
+        double sum = 0;
+        Iterator<Double> iter = list.iterator();
+        while(iter.hasNext()) {
+        	sum += iter.next();
+        }        
+        
+        return sum / list.size();
+    }   
 }

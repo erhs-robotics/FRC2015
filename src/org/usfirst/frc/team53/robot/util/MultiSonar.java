@@ -22,7 +22,7 @@ public class MultiSonar {
 	}
 	
 	public double getRawSonar(int index){
-		
+		this.pulsePin.pulse(this.pulsePin.getChannel(), (float) 35.0);
 		return this.sonar.get(index).getVoltage();
 	}
 	

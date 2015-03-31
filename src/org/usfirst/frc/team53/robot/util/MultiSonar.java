@@ -12,6 +12,18 @@ public class MultiSonar {
 		this.scaleFactor = scaleFactor;
 	}
 	
+	/**
+	 * The pins should be initiated left from right from the view of the robot
+	 */
+	public MultiSonar(double scaleFactor, int... pins)
+	{
+		this.scaleFactor = scaleFactor;
+		for(int i = 0; i < pins.length; i++)
+		{
+			this.sonar.add(new AnalogInput(pins[i]));
+		}
+	}
+	
 	public double getSonar(int index){
 		return this.sonar.get(index).getVoltage()*this.scaleFactor;
 	}

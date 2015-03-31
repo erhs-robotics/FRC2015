@@ -41,7 +41,7 @@ public class OI {
 			driveSlowB.whenPressed(Robot.driveTrain::setSpeedSlow);
 			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);
 			driveFastB.whenPressed(Robot.driveTrain::setSpeedFast);
-			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);
+			driveFastB.whenReleased(Robot.driveTrain::setSpeedNormal);
 		}
 		
 		if(Robot.elevator != null) {

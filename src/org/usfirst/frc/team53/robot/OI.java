@@ -17,6 +17,7 @@ public class OI {
 		JoystickButtonX toggleDriveModeB = new JoystickButtonX(mDriveStick, 1);// drivetrain manual mode/pid mode
 		JoystickButtonX toggleDrivePID_B = new JoystickButtonX(mDriveStick, 2);// drivetrain toggle pid
 		JoystickButtonX driveSlowB = new JoystickButtonX(mDriveStick, 12);
+		JoystickButtonX driveFastB = new JoystickButtonX(mDriveStick, 11);
 		JoystickButtonX toggleClawB = new JoystickButtonX(mClawStick, 1);// claw toggle			
 		JoystickButtonX decrementElevatorB = new JoystickButtonX(mClawStick, 2);// decrement elevator
 		JoystickButtonX incrementElevatorB = new JoystickButtonX(mClawStick, 3);// increment elevator
@@ -39,6 +40,8 @@ public class OI {
 			toggleDrivePID_B.whenPressed(Robot.driveTrain::togglePID);
 			driveSlowB.whenPressed(Robot.driveTrain::setSpeedSlow);
 			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);
+			driveFastB.whenPressed(Robot.driveTrain::setSpeedFast);
+			driveFastB.whenReleased(Robot.driveTrain::setSpeedNormal);
 		}
 		
 		if(Robot.elevator != null) {

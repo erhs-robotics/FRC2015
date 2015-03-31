@@ -48,7 +48,6 @@ public class OI {
 			fixAlignB.whenReleased(() -> Robot.driveTrain.getCurrentCommand().cancel());
 			fixDistanceB.whenPressed(new FixDistanceCommand());
 			fixDistanceB.whenReleased(() -> Robot.driveTrain.getCurrentCommand().cancel());
-			
 		}
 		
 		if(Robot.elevator != null) {

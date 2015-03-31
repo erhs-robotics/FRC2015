@@ -27,6 +27,7 @@ public class RobotMap {
 	
 	// Analog In	
 	public static int gyro = 0;
+	public static int autoSelector = 9;
 	public static int sonarLeft = 1;
 	public static int sonarRight = 2;
 	

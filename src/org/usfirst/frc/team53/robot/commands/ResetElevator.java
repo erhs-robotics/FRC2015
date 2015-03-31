@@ -24,7 +24,7 @@ public class ResetElevator extends Command {
 
 	@Override
 	protected boolean isFinished() {		
-		return Robot.elevator.isAtBottom();
+		return true;//Robot.elevator.isAtBottom();
 	}
 
 	@Override

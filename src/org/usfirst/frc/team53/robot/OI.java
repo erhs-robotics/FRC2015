@@ -10,38 +10,44 @@ import edu.wpi.first.wpilibj.Joystick;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	public static Joystick stick = new Joystick(0);
+	public static Joystick mDriveStick = new Joystick(0);
+	public static Joystick mClawStick = new Joystick(1);
 
 	public OI() {
-		JoystickButtonX button1 = new JoystickButtonX(stick, 1);// drivetrain manual mode/pid mode
-		JoystickButtonX button2 = new JoystickButtonX(stick, 2);// drivetrain toggle pid
-		JoystickButtonX button3 = new JoystickButtonX(stick, 3);// claw open		
-		JoystickButtonX button4 = new JoystickButtonX(stick, 4);// claw close		
-		JoystickButtonX button5 = new JoystickButtonX(stick, 5);// decrement elevator
-		JoystickButtonX button6 = new JoystickButtonX(stick, 6);// increment elevator
-		JoystickButtonX button7 = new JoystickButtonX(stick, 7);// elevator toggle stack adjust
-		JoystickButtonX button8 = new JoystickButtonX(stick, 8);// elevator toggle hook adjust
-
+		JoystickButtonX toggleDriveModeB = new JoystickButtonX(mDriveStick, 1);// drivetrain manual mode/pid mode
+		JoystickButtonX toggleDrivePID_B = new JoystickButtonX(mDriveStick, 2);// drivetrain toggle pid
+		JoystickButtonX driveSlowB = new JoystickButtonX(mDriveStick, 12);
+		JoystickButtonX toggleClawB = new JoystickButtonX(mClawStick, 1);// claw toggle			
+		JoystickButtonX decrementElevatorB = new JoystickButtonX(mClawStick, 2);// decrement elevator
+		JoystickButtonX incrementElevatorB = new JoystickButtonX(mClawStick, 3);// increment elevator
+		JoystickButtonX stackAdjustB = new JoystickButtonX(mClawStick, 10);// elevator toggle stack adjust
+		JoystickButtonX hookAdjustB = new JoystickButtonX(mClawStick, 11);// elevator toggle hook adjust
+		JoystickButtonX manualUpB = new JoystickButtonX(mClawStick, 8);// elevator toggle hook adjust\
+		JoystickButtonX manualDownB = new JoystickButtonX(mClawStick, 9);// elevator toggle hook adjust
+		
 		if(Robot.claw != null) {
 			SmartDashboardX.putData("Open Claw", Robot.claw::open);
 			SmartDashboardX.putData("Close Claw", Robot.claw::close);			
-			button3.whenPressed(Robot.claw::open);
-			button4.whenPressed(Robot.claw::close);
+			toggleClawB.whenPressed(Robot.claw::toggle);			
 		}
 		
 		if(Robot.driveTrain != null) {	
 			SmartDashboardX.putData("Drivetrain: Set Rotate Mode", Robot.driveTrain::setManualMode);
-			SmartDashboardX.putData("DriveTrain: Set Drive Mode", Robot.driveTrain::setPIDMode);
-			button1.whenPressed(Robot.driveTrain::setManualMode);
-			button1.whenReleased(Robot.driveTrain::setPIDMode);
-			button2.whenPressed(Robot.driveTrain::togglePID);
+			SmartDashboardX.putData("DriveTrain: Set Drive Mode", Robot.driveTrain::setDriveMode);
+			toggleDriveModeB.whenPressed(Robot.driveTrain::setManualMode);
+			toggleDriveModeB.whenReleased(Robot.driveTrain::setDriveMode);
+			toggleDrivePID_B.whenPressed(Robot.driveTrain::togglePID);
+			driveSlowB.whenPressed(Robot.driveTrain::setSpeedSlow);
+			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);
 		}
 		
 		if(Robot.elevator != null) {
-			button5.whenPressed(Robot.elevator::decrementLevel);
-			button6.whenPressed(Robot.elevator::incrementLevel);
-			button7.whenPressed(Robot.elevator::toggleStackAdjust);
-			button8.whenPressed(Robot.elevator::toggleHookAdjust);
+			decrementElevatorB.whenPressed(Robot.elevator::decrementLevel);
+			incrementElevatorB.whenPressed(Robot.elevator::incrementLevel);
+			stackAdjustB.whenPressed(Robot.elevator::toggleStackAdjust);
+			hookAdjustB.whenPressed(Robot.elevator::toggleHookAdjust);
+			manualDownB.whileActive(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint() - 0.01));
+			manualUpB.whileActive(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint() + 0.01));
 		}		
 	}
 }

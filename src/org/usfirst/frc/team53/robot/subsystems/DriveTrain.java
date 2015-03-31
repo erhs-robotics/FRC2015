@@ -17,9 +17,11 @@ public class DriveTrain extends PIDSubsystem {
 	// Constants
 	private static final double KP = 2, KI = 0.02, KD = 0;// PID constants
 	private static final double PID_SCALE = 0.01;// so we have enough sigfigs tuning PID in livewindow
+	private static final double NORMAL_SPEED = 0.6;
+	private static final double SLOW_SPEED = 0.3;
 	private static final double SONAR_SCALE_INCHES = (1/(5/512.0)); // 1/(Vcc/512) * data
 	private static final double SONAR_SCALE_TOTES = SONAR_SCALE_INCHES * (1/27); // scale to tote lengths
-		
+	
 	// Electronics Objects
 	public RobotDrive mRobotDrive;	
 	private Talon mDriveTopLeft, mDriveTopRight, mDriveBottomLeft, mDriveBottomRight;	
@@ -28,8 +30,9 @@ public class DriveTrain extends PIDSubsystem {
 	public AnalogInput mSonarRight;
 	
 	// Flags and other internals
-	private double mRotation;// rotation specified by PID
+	private double mRotation = 0;// rotation specified by PID
 	private boolean mRotateMode = false;// flag
+	private double mMaxSpeed = NORMAL_SPEED;
 	
 	public DriveTrain() {		
 		super(KP, KI, KD);		
@@ -44,11 +47,13 @@ public class DriveTrain extends PIDSubsystem {
 		mRobotDrive = new RobotDrive(mDriveTopLeft, mDriveBottomLeft, mDriveTopRight, mDriveBottomRight);
 		mRobotDrive.setInvertedMotor(MotorType.kFrontRight, true);
 		mRobotDrive.setInvertedMotor(MotorType.kRearRight, true);
+		mRobotDrive.setSafetyEnabled(false);
 		
 		setOutputRange(-0.5 / PID_SCALE, 0.5 / PID_SCALE);
-		setSetpoint(mGyro.getAngle());
+
+		setSetpoint(mGyro.getAngle());		
+
 		disable();
-				
 		LiveWindow.addActuator("DriveTrain", "Bottom Left", mDriveBottomLeft);
 		LiveWindow.addActuator("DriveTrain", "Bottom Right", mDriveBottomRight);
 		LiveWindow.addActuator("DriveTrain", "Top Left", mDriveTopLeft);
@@ -61,19 +66,31 @@ public class DriveTrain extends PIDSubsystem {
 	}
 	
 	public void mecanumDrive() {		
-		double x = OI.stick.getX();
-		double y = OI.stick.getY();
-		double rot = OI.stick.getTwist();
+		double x = OI.mDriveStick.getX();
+		double y = OI.mDriveStick.getY();
+		double rot = OI.mDriveStick.getTwist();
 		x = x*x*x;
 		y = y*y*y;
 		rot = rot*rot*rot;
-		rot = Math.min(rot, 0.4);
-		rot = Math.max(rot, -0.4);
+		rot = Math.min(rot, 0.35);
+		rot = Math.max(rot, -0.35);
 		if(mRotateMode)
 			mRobotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
 		else
-			mRobotDrive.mecanumDrive_Cartesian(x*.6, y*.6, mRotation, 0);
+			mRobotDrive.mecanumDrive_Cartesian(x*mMaxSpeed, y*mMaxSpeed, mRotation, 0);
 		
+	}
+	
+	public void mecanumDrivePID(double x, double y) {
+		mRobotDrive.mecanumDrive_Cartesian(x, y, mRotation, 0);		
+	}
+	
+	public void setSpeedSlow() {
+		mMaxSpeed = SLOW_SPEED;
+	}
+	
+	public void setSpeedNormal() {
+		mMaxSpeed = NORMAL_SPEED;
 	}
 	
 	public void setManualMode() {
@@ -82,10 +99,10 @@ public class DriveTrain extends PIDSubsystem {
 		SmartDashboard.putString("Drivetrain Mode: ", "Rotate");
 	}
 	
-	public void setPIDMode() {
-		mRotateMode = false;
+	public void setDriveMode() {
 		setSetpoint(mGyro.getAngle());
-		enable();
+		mRotateMode = false;
+		//enable();
 		SmartDashboard.putString("Drivetrain Mode: ", "Drive");
 	}
 	

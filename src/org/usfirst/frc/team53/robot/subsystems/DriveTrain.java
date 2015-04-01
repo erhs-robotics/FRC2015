@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -183,5 +184,12 @@ public class DriveTrain extends PIDSubsystem {
 	
 	public void enableManualControl() {
 		manualControl = true;
+		
 	}
+	
+	 public void cancelCurrentCommand() {
+		 // TODO: I am not sure you have do a null check here, but better safe then sorry
+		 Command command = this.getCurrentCommand();
+		 if(command != null) command.cancel();
+	 }
 }

@@ -45,9 +45,9 @@ public class OI {
 			driveSlowB.whenPressed(Robot.driveTrain::setSpeedSlow);
 			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);			
 			fixAlignB.whenPressed(new FixAlignCommand());			
-			fixAlignB.whenReleased(() -> Robot.driveTrain.getCurrentCommand().cancel());
-			fixDistanceB.whenPressed(new FixDistanceCommand());
-			fixDistanceB.whenReleased(() -> Robot.driveTrain.getCurrentCommand().cancel());
+			fixAlignB.whenReleased(Robot.driveTrain::cancelCurrentCommand);
+			fixDistanceB.whenPressed(new FixDistanceCommand());			
+			fixDistanceB.whenReleased(Robot.driveTrain::cancelCurrentCommand);
 		}
 		
 		if(Robot.elevator != null) {

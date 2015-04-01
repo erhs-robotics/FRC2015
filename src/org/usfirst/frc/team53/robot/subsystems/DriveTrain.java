@@ -38,8 +38,8 @@ public class DriveTrain extends PIDSubsystem {
 	private double mRotation = 0;// rotation specified by PID
 	private boolean mRotateMode = false;// flag
 	private double mMaxSpeed = NORMAL_SPEED;
-	private PIDControllerX alignmentController;
-	private PIDControllerX distanceController;
+	public PIDControllerX alignmentController;
+	public PIDControllerX distanceController;
 	private boolean manualControl = true;
 	
 	public DriveTrain() {		

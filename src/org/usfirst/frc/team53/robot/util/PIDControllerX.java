@@ -197,6 +197,7 @@ public class PIDControllerX {
     public double getSetpoint() { return this.setpoint; }
     public double getMinOutput() { return this.minOutput; }
     public double getMaxOutput() { return this.maxOutput; }
+    public double getLastError() { return lastError; }
     public boolean isEnabled() { return this.enabled; }
     
     /****************************

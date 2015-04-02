@@ -1,5 +1,8 @@
 package org.usfirst.frc.team53.robot;
 
+import org.usfirst.frc.team53.robot.commands.Autonomous;
+import org.usfirst.frc.team53.robot.commands.FixAlignCommand;
+import org.usfirst.frc.team53.robot.commands.FixDistanceCommand;
 import org.usfirst.frc.team53.robot.util.JoystickButtonX;
 import org.usfirst.frc.team53.robot.util.SmartDashboardX;
 
@@ -17,7 +20,8 @@ public class OI {
 		JoystickButtonX toggleDriveModeB = new JoystickButtonX(mDriveStick, 1);// drivetrain manual mode/pid mode
 		JoystickButtonX toggleDrivePID_B = new JoystickButtonX(mDriveStick, 2);// drivetrain toggle pid
 		JoystickButtonX driveSlowB = new JoystickButtonX(mDriveStick, 12);
-		JoystickButtonX driveFastB = new JoystickButtonX(mDriveStick, 11);
+		JoystickButtonX fixAlignB = new JoystickButtonX(mDriveStick, 10);
+		JoystickButtonX fixDistanceB = new JoystickButtonX(mDriveStick, 9);
 		JoystickButtonX toggleClawB = new JoystickButtonX(mClawStick, 1);// claw toggle			
 		JoystickButtonX decrementElevatorB = new JoystickButtonX(mClawStick, 2);// decrement elevator
 		JoystickButtonX incrementElevatorB = new JoystickButtonX(mClawStick, 3);// increment elevator
@@ -39,9 +43,11 @@ public class OI {
 			toggleDriveModeB.whenReleased(Robot.driveTrain::setDriveMode);
 			toggleDrivePID_B.whenPressed(Robot.driveTrain::togglePID);
 			driveSlowB.whenPressed(Robot.driveTrain::setSpeedSlow);
-			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);
-			driveFastB.whenPressed(Robot.driveTrain::setSpeedFast);
-			driveFastB.whenReleased(Robot.driveTrain::setSpeedNormal);
+			driveSlowB.whenReleased(Robot.driveTrain::setSpeedNormal);			
+			fixAlignB.whenPressed(new FixAlignCommand());			
+			fixAlignB.whenReleased(Robot.driveTrain::cancelCurrentCommand);
+			fixDistanceB.whenPressed(new FixDistanceCommand());			
+			fixDistanceB.whenReleased(Robot.driveTrain::cancelCurrentCommand);
 		}
 		
 		if(Robot.elevator != null) {
@@ -51,6 +57,7 @@ public class OI {
 			hookAdjustB.whenPressed(Robot.elevator::toggleHookAdjust);
 			manualDownB.whileActive(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint() - 0.01));
 			manualUpB.whileActive(() -> Robot.elevator.setSetpoint(Robot.elevator.getSetpoint() + 0.01));
+			
 		}		
 	}
 }

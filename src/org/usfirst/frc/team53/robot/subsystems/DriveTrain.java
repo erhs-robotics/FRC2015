@@ -2,12 +2,15 @@ package org.usfirst.frc.team53.robot.subsystems;
 
 import org.usfirst.frc.team53.robot.OI;
 import org.usfirst.frc.team53.robot.RobotMap;
+import org.usfirst.frc.team53.robot.util.PIDControllerX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,8 +23,10 @@ public class DriveTrain extends PIDSubsystem {
 	private static final double FAST_SPEED   = 1.0;
 	private static final double NORMAL_SPEED = 0.6;
 	private static final double SLOW_SPEED = 0.3;
-	private static final double SONAR_SCALE_INCHES = (1/(5/512.0)); // 1/(Vcc/512) * data
-	private static final double SONAR_SCALE_TOTES = SONAR_SCALE_INCHES * (1/27); // scale to tote lengths
+	private static final double SONAR_A = 1.684065934;
+	private static final double SONAR_B = 7.351648352;
+	private static final double SONAR_DISPARITY = 24; // in inches
+	private static final double TOTE_DISTANCE = 30; // in inches
 	
 	// Electronics Objects
 	public RobotDrive mRobotDrive;	
@@ -34,6 +39,9 @@ public class DriveTrain extends PIDSubsystem {
 	private double mRotation = 0;// rotation specified by PID
 	private boolean mRotateMode = false;// flag
 	private double mMaxSpeed = NORMAL_SPEED;
+	public PIDControllerX alignmentController;
+	public PIDControllerX distanceController;
+	private boolean manualControl = true;
 	
 	public DriveTrain() {		
 		super(KP, KI, KD);		
@@ -48,7 +56,9 @@ public class DriveTrain extends PIDSubsystem {
 		mRobotDrive = new RobotDrive(mDriveTopLeft, mDriveBottomLeft, mDriveTopRight, mDriveBottomRight);
 		mRobotDrive.setInvertedMotor(MotorType.kFrontRight, true);
 		mRobotDrive.setInvertedMotor(MotorType.kRearRight, true);
-		mRobotDrive.setSafetyEnabled(false);
+		mRobotDrive.setSafetyEnabled(false);	
+		alignmentController = new PIDControllerX(1, 0, 0, 0);
+		distanceController = new PIDControllerX(1, 0, 0, TOTE_DISTANCE);
 		
 		setOutputRange(-0.5 / PID_SCALE, 0.5 / PID_SCALE);
 
@@ -66,20 +76,21 @@ public class DriveTrain extends PIDSubsystem {
 		SmartDashboard.putNumber("Sonar (inches)", getCenterSonarDist());
 	}
 	
-	public void mecanumDrive() {		
-		double x = OI.mDriveStick.getX();
-		double y = OI.mDriveStick.getY();
-		double rot = OI.mDriveStick.getTwist();
-		x = x*x*x;
-		y = y*y*y;
-		rot = rot*rot*rot;
-		rot = Math.min(rot, 0.35);
-		rot = Math.max(rot, -0.35);
-		if(mRotateMode)
-			mRobotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
-		else
-			mRobotDrive.mecanumDrive_Cartesian(x*mMaxSpeed, y*mMaxSpeed, mRotation, 0);
-		
+	public void mecanumDrive() {
+		if(manualControl) {
+			double x = OI.mDriveStick.getX();
+			double y = OI.mDriveStick.getY();
+			double rot = OI.mDriveStick.getTwist();
+			x = x*x*x;
+			y = y*y*y;
+			rot = rot*rot*rot;
+			rot = Math.min(rot, 0.35);
+			rot = Math.max(rot, -0.35);
+			if(mRotateMode)
+				mRobotDrive.mecanumDrive_Cartesian(0, 0, rot, 0);	
+			else
+				mRobotDrive.mecanumDrive_Cartesian(x*mMaxSpeed, y*mMaxSpeed, mRotation, 0);	
+		}
 	}
 	
 	public void mecanumDrivePID(double x, double y) {
@@ -133,19 +144,52 @@ public class DriveTrain extends PIDSubsystem {
 		mRotation = output * PID_SCALE;		
 	}
 	
-	public double getLeftSonarDist(){
-		return mSonarLeft.getVoltage() * SONAR_SCALE_INCHES; 
+	private double voltage2distance(double voltage) {
+		return voltage * SONAR_A + SONAR_B;
 	}
 	
-	public double getRightSonarDist(){
-		return mSonarRight.getVoltage() * SONAR_SCALE_INCHES; 
+	public double getLeftSonarDist() {
+		
+		return voltage2distance(mSonarLeft.getVoltage()); 
 	}
 	
-	public double getSonarRotation(){
-		return Math.asin(getLeftSonarDist()-getCenterSonarDist());
+	public double getRightSonarDist() {
+		return voltage2distance(mSonarRight.getVoltage()); 
 	}
-	
-	public double getCenterSonarDist(){
+
+	public double getSonarRotation() {
+		double disparity = getLeftSonarDist() - getRightSonarDist();
+		return Math.atan(disparity / SONAR_DISPARITY);
+	}
+
+	public double getCenterSonarDist() {
 		return (getLeftSonarDist() + getRightSonarDist())/2;
 	}
+	
+	public void runAlignmentController() {
+		double theta = getSonarRotation();
+		double response = alignmentController.getPIDResponse(theta);
+		mRobotDrive.mecanumDrive_Cartesian(0, 0, response, 0);
+	}
+	
+	public void runDistanceController() {
+		double dist = getCenterSonarDist();
+		double response = distanceController.getPIDResponse(dist);
+		mRobotDrive.mecanumDrive_Cartesian(0, response, 0, 0);
+	}
+	
+	public void disableManualControl() {
+		manualControl = false;
+	}
+	
+	public void enableManualControl() {
+		manualControl = true;
+		
+	}
+	
+	 public void cancelCurrentCommand() {
+		 // TODO: I am not sure you have do a null check here, but better safe then sorry
+		 Command command = this.getCurrentCommand();
+		 if(command != null) command.cancel();
+	 }
 }

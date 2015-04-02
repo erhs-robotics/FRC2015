@@ -24,10 +24,9 @@ public class RobotMap {
 						    driveTrainTopRight = 4;
 	public static final int elevatorMotor1 = 5, 
 							elevatorMotor2 = 6;
-	
+		
 	// Analog In	
-	public static int gyro = 0;
-	public static int autoSelector = 9;
+	public static int gyro = 0;	
 	public static int sonarLeft = 1;
 	public static int sonarRight = 2;
 	
@@ -40,4 +39,5 @@ public class RobotMap {
 	public static final int elevatorEncoderChannelB = 1;
 	public static final int elevatorTopLimitSwitch = 5;
 	public static final int elevatorBottomLimitSwitch = 6;
+	public static final int autoSelector = 9;
 }

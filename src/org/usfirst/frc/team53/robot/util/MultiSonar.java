@@ -10,8 +10,7 @@ public class MultiSonar {
 	private double scaleFactor;
 	private DigitalOutput pulsePin;
 	
-	public MultiSonar(int numSensors, int pulsePin, double scaleFactor, ArrayList<Integer> pins){
-		assert numSensors == pins.size();
+	public MultiSonar(int pulsePin, double scaleFactor, ArrayList<Integer> pins){
 		this.pulsePin = new DigitalOutput(pulsePin);
 		pins.forEach((pin) -> this.sonar.add(new AnalogInput(pin)));
 		this.scaleFactor = scaleFactor;
